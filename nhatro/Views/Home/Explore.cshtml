@@ -1,0 +1,175 @@
+@model IEnumerable<nhatro.Models.RoomListing>
+@{
+    ViewData["Title"] = "Kết quả tìm kiếm phòng";
+}
+
+<div class="flex-grow flex flex-col md:flex-row w-full max-w-container-max mx-auto px-4 md:px-xl py-md md:py-lg gap-gutter">
+    <!-- Mobile View Toggle (Map vs List) - Visible only on small screens -->
+    <div class="md:hidden flex justify-between items-center mb-4 bg-surface-container-low p-1 rounded-lg w-full">
+        <button class="flex-1 bg-surface shadow-sm rounded-md py-2 font-label-md text-primary flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">list</span> Danh sách
+        </button>
+        <button class="flex-1 text-on-surface-variant rounded-md py-2 font-label-md hover:bg-surface-variant flex items-center justify-center gap-2 transition-colors">
+            <span class="material-symbols-outlined text-[18px]">map</span> Bản đồ
+        </button>
+    </div>
+    <!-- Left Sidebar: Advanced Filters -->
+    <aside class="hidden md:block w-72 shrink-0 self-start sticky top-24 max-h-[calc(100vh-120px)] overflow-y-auto filter-scroll pr-4 pb-8">
+        <form method="get" action="@Url.Action("Explore", "Home")">
+            @if (!string.IsNullOrEmpty(ViewBag.Query as string))
+            {
+                <input type="hidden" name="query" value="@ViewBag.Query" />
+            }
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="font-title-md text-title-md text-primary">Bộ lọc</h2>
+                <a href="@Url.Action("Explore", "Home")" class="text-secondary font-label-sm hover:underline">Đặt lại</a>
+            </div>
+            <!-- Price Range -->
+            <div class="mb-8 border-b border-outline-variant/30 pb-6">
+                <h3 class="font-label-md text-label-md mb-4 text-on-surface">Khoảng giá (VNĐ/tháng)</h3>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="flex-1 relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">₫</span>
+                        <input name="minPrice" class="w-full pl-8 pr-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" type="number" value="@(ViewBag.MinPrice ?? 3000000)" />
+                    </div>
+                    <span class="text-outline">-</span>
+                    <div class="flex-1 relative">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-outline text-sm">₫</span>
+                        <input name="maxPrice" class="w-full pl-8 pr-3 py-2 bg-surface border border-outline-variant rounded-lg text-sm focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" type="number" value="@(ViewBag.MaxPrice ?? 15000000)" />
+                    </div>
+                </div>
+            </div>
+            <!-- Room Type (Pills) -->
+            @{
+                var roomTypes = ViewBag.RoomTypes as string[] ?? Array.Empty<string>();
+            }
+            <div class="mb-8 border-b border-outline-variant/30 pb-6">
+                <h3 class="font-label-md text-label-md mb-4 text-on-surface">Loại phòng</h3>
+                <div class="flex flex-wrap gap-2">
+                    <label class="cursor-pointer">
+                        <input name="roomTypes" value="Studio" @(roomTypes.Contains("Studio") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                        <div class="px-4 py-2 rounded-full border border-outline-variant text-sm font-medium peer-checked:bg-secondary-container peer-checked:border-secondary-container peer-checked:text-on-secondary-container transition-all hover:bg-surface-container">
+                            Studio
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input name="roomTypes" value="Phòng chung" @(roomTypes.Contains("Phòng chung") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                        <div class="px-4 py-2 rounded-full border border-outline-variant text-sm font-medium peer-checked:bg-secondary-container peer-checked:border-secondary-container peer-checked:text-on-secondary-container transition-all hover:bg-surface-container">
+                            Phòng chung
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <input name="roomTypes" value="Nguyên căn" @(roomTypes.Contains("Nguyên căn") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                        <div class="px-4 py-2 rounded-full border border-outline-variant text-sm font-medium peer-checked:bg-secondary-container peer-checked:border-secondary-container peer-checked:text-on-secondary-container transition-all hover:bg-surface-container">
+                            Nguyên căn
+                        </div>
+                    </label>
+                </div>
+            </div>
+            <!-- Amenities -->
+            @{
+                var amenities = ViewBag.Amenities as string[] ?? Array.Empty<string>();
+            }
+            <div class="mb-8 border-b border-outline-variant/30 pb-6">
+                <h3 class="font-label-md text-label-md mb-4 text-on-surface">Tiện nghi</h3>
+                <div class="space-y-3">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center justify-center">
+                            <input name="amenities" value="Điều hòa" @(amenities.Contains("Điều hòa") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                            <div class="w-5 h-5 border-2 border-outline rounded bg-surface peer-checked:bg-secondary peer-checked:border-secondary transition-colors"></div>
+                            <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" data-icon="check">check</span>
+                        </div>
+                        <span class="text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px] text-outline">ac_unit</span> Điều hòa
+                        </span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center justify-center">
+                            <input name="amenities" value="WiFi tốc độ cao" @(amenities.Contains("WiFi tốc độ cao") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                            <div class="w-5 h-5 border-2 border-outline rounded bg-surface peer-checked:bg-secondary peer-checked:border-secondary transition-colors"></div>
+                            <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" data-icon="check">check</span>
+                        </div>
+                        <span class="text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px] text-outline">wifi</span> WiFi tốc độ cao
+                        </span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center justify-center">
+                            <input name="amenities" value="Chỗ để xe" @(amenities.Contains("Chỗ để xe") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                            <div class="w-5 h-5 border-2 border-outline rounded bg-surface peer-checked:bg-secondary peer-checked:border-secondary transition-colors"></div>
+                            <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" data-icon="check">check</span>
+                        </div>
+                        <span class="text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px] text-outline">local_parking</span> Chỗ để xe
+                        </span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <div class="relative flex items-center justify-center">
+                            <input name="amenities" value="Bếp riêng" @(amenities.Contains("Bếp riêng") ? "checked" : "") class="peer sr-only" type="checkbox" onchange="this.form.submit()" />
+                            <div class="w-5 h-5 border-2 border-outline rounded bg-surface peer-checked:bg-secondary peer-checked:border-secondary transition-colors"></div>
+                            <span class="material-symbols-outlined absolute text-white text-[16px] opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" data-icon="check">check</span>
+                        </div>
+                        <span class="text-body-md text-on-surface-variant group-hover:text-on-surface transition-colors flex items-center gap-2">
+                            <span class="material-symbols-outlined text-[18px] text-outline">kitchen</span> Bếp riêng
+                        </span>
+                    </label>
+                </div>
+            </div>
+            <!-- Distance to Center -->
+            <div class="mb-4">
+                <h3 class="font-label-md text-label-md mb-4 text-on-surface">Khoảng cách đến trung tâm</h3>
+                <select name="distance" onchange="this.form.submit()" class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 text-body-md focus:border-secondary focus:ring-1 focus:ring-secondary transition-all appearance-none cursor-pointer">
+                    <option value="< 2 km" selected="@(ViewBag.Distance == "< 2 km" ? "selected" : null)">&lt; 2 km</option>
+                    <option value="< 5 km" selected="@(ViewBag.Distance == "< 5 km" ? "selected" : null)">&lt; 5 km</option>
+                    <option value="< 10 km" selected="@(ViewBag.Distance == "< 10 km" ? "selected" : null)">&lt; 10 km</option>
+                    <option value="Bất kỳ" selected="@(ViewBag.Distance == "Bất kỳ" || ViewBag.Distance == null ? "selected" : null)">Bất kỳ</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full mt-6 bg-primary text-on-primary py-3 rounded-lg font-label-md hover:bg-primary/90 transition-colors shadow-sm">
+                Áp dụng
+            </button>
+        </form>
+    </aside>
+    <!-- Main Listings Canvas (Bento/Asymmetric feel rather than standard list) -->
+    <section class="flex-1 min-w-0 flex flex-col">
+        <!-- Header & Map Toggle Desktop -->
+        <div class="flex justify-between items-end mb-6">
+            <div>
+                <h1 class="font-headline-lg-mobile md:font-headline-lg text-primary tracking-tight mb-1">Chỗ ở tại Tây Hồ</h1>
+                <p class="text-on-surface-variant font-body-md">24 chỗ ở cao cấp hiện có</p>
+            </div>
+            <div class="hidden md:flex items-center gap-4">
+                <div class="flex items-center bg-surface-container rounded-lg p-1 border border-outline-variant/20">
+                    <button class="px-4 py-1.5 rounded-md bg-surface shadow-sm font-label-md text-primary flex items-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-[18px]">grid_view</span> Lưới
+                    </button>
+                    <button class="px-4 py-1.5 rounded-md text-on-surface-variant font-label-md hover:text-primary flex items-center gap-2 transition-all">
+                        <span class="material-symbols-outlined text-[18px]">map</span> Bản đồ
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Listings Grid (Responsive: 1 col mobile, 2 col tablet, complex grid large desktop) -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 pb-12">
+            @foreach (var room in Model)
+            {
+                <partial name="_RoomCard" model="room" />
+            }
+        </div>
+        <!-- Pagination -->
+        <div class="flex justify-center mt-auto pb-8">
+            <nav class="flex items-center gap-2">
+                <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50">
+                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                </button>
+                <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-secondary text-on-secondary font-label-md">1</button>
+                <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">2</button>
+                <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">3</button>
+                <span class="text-on-surface-variant px-2">...</span>
+                <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors">
+                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                </button>
+            </nav>
+        </div>
+    </section>
+</div>
