@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Kênh Chủ Trọ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="flex h-screen bg-white text-gray-800 overflow-hidden">
+
+    <aside class="w-[260px] bg-[#f8f9fb] flex flex-col border-r border-gray-100 flex-shrink-0">
+        
+        <div class="p-8 pb-4 flex items-center gap-3">
+            <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
+                <img src="https://ui-avatars.com/api/?name=@User.Identity.Name&background=136A64&color=fff" class="w-full h-full object-cover">
+            </div>
+            <div class="overflow-hidden">
+                <h3 class="font-bold text-gray-800 text-sm truncate">@User.Identity.Name</h3>
+                <p class="text-xs text-gray-500">Premium Host</p>
+            </div>
+        </div>
+
+        <nav class="flex-1 px-4 mt-6 space-y-2 overflow-y-auto">
+            <a href="/Owner" class="flex items-center gap-3 px-4 py-3 bg-[#a2eded]/50 text-[#13696a] rounded-xl font-semibold transition-colors">
+                <span class="material-symbols-outlined icon-filled">dashboard_customize</span>
+                Tổng quan
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
+                <span class="material-symbols-outlined">home</span>
+                Nhà/Phòng cho thuê
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
+                <span class="material-symbols-outlined">calendar_month</span>
+                Lịch hẹn xem phòng
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
+                <span class="material-symbols-outlined">payments</span>
+                Tài chính
+            </a>
+        </nav>
+
+        <div class="p-4 border-t border-gray-200/50 space-y-2">
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-500 hover:text-gray-800 transition-colors">
+                <span class="material-symbols-outlined">settings</span>
+                Cài đặt
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-2 text-gray-500 hover:text-gray-800 transition-colors">
+                <span class="material-symbols-outlined">help</span>
+                Trợ giúp
+            </a>
+            <form asp-controller="Account" asp-action="Logout" method="post" class="mt-2">
+                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors text-left">
+                    <span class="material-symbols-outlined">logout</span>
+                    Đăng xuất
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white p-8 md:p-12">
+        @RenderBody()
+    </main>
+
+</body>
+</html>

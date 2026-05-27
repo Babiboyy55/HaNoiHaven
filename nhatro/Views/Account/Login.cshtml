@@ -1,0 +1,82 @@
+@model nhatro.Models.LoginViewModel
+@{
+    Layout = null; // Ẩn Navbar mặc định của hệ thống
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Hanoi Haven</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body { background-color: #F8F9FB; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .login-card { background: #fff; border-radius: 12px; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); width: 100%; max-width: 450px; }
+        .text-primary-custom { color: #0C1E3A; font-weight: bold; }
+        .btn-custom { background-color: #136A64; color: white; font-weight: 500; border-radius: 6px; padding: 12px; }
+        .btn-custom:hover { background-color: #0f544f; color: white; }
+        .form-control { border-radius: 6px; padding: 10px 15px; border-color: #E2E8F0; }
+        .form-control:focus { border-color: #136A64; box-shadow: 0 0 0 0.2rem rgba(19, 106, 100, 0.25); }
+        .input-icon { position: absolute; left: 15px; top: 12px; color: #94A3B8; }
+        .has-icon { padding-left: 40px; }
+        .social-btn { border: 1px solid #E2E8F0; background: #fff; color: #0C1E3A; font-weight: 500; }
+        .social-btn:hover { background: #F8F9FB; }
+        .divider { display: flex; align-items: center; text-align: center; color: #94A3B8; margin: 20px 0; font-size: 0.9rem; }
+        .divider::before, .divider::after { content: ''; flex: 1; border-bottom: 1px solid #E2E8F0; }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+    </style>
+</head>
+<body>
+    <div class="text-center w-100">
+        <h1 class="text-primary-custom mb-2">Hanoi Haven</h1>
+        <p class="text-muted mb-4">Chào mừng trở lại! Vui lòng đăng nhập vào tài khoản<br />của bạn.</p>
+
+        <div class="login-card mx-auto text-start">
+            <form asp-action="Login" method="post">
+                <div class="mb-3 position-relative">
+                    <label class="form-label fw-bold" style="font-size:0.9rem;">Địa chỉ Email</label>
+                    <i class="fa-regular fa-envelope input-icon"></i>
+                    <input asp-for="Email" class="form-control has-icon" placeholder="ten@vidu.com" />
+                    <span asp-validation-for="Email" class="text-danger" style="font-size:0.85rem;"></span>
+                </div>
+
+                <div class="mb-3 position-relative">
+                    <label class="form-label fw-bold" style="font-size:0.9rem;">Mật khẩu</label>
+                    <i class="fa-solid fa-lock input-icon"></i>
+                    <input asp-for="Password" class="form-control has-icon" placeholder="••••••••" />
+                    <span asp-validation-for="Password" class="text-danger" style="font-size:0.85rem;"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="form-check">
+                        <input asp-for="RememberMe" class="form-check-input" id="rememberMe">
+                        <label class="form-check-label text-muted" style="font-size:0.9rem;" for="rememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <a href="#" style="color: #136A64; text-decoration: none; font-size:0.9rem; font-weight: 500;">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="btn btn-custom w-100 mb-3">Đăng Nhập</button>
+
+                <div class="divider">Hoặc tiếp tục với</div>
+
+                <div class="row">
+                    <div class="col-6">
+                        <button type="button" class="btn social-btn w-100 py-2"><i class="fa-brands fa-google text-danger me-2"></i> Google</button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn social-btn w-100 py-2"><i class="fa-brands fa-facebook text-primary me-2"></i> Facebook</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <p class="mt-4 text-muted">Chưa có tài khoản? <a asp-action="Register" style="color: #136A64; text-decoration: none; font-weight: bold;">Đăng ký ngay</a></p>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
