@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"] - Admin HanoiHaven</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#002045',
+                        secondary: '#13696a',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        /* Tùy chỉnh thanh cuộn cho đẹp */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden text-gray-800">
+
+    <aside class="w-64 bg-primary text-white flex flex-col transition-all duration-300 z-20">
+        <div class="h-16 flex items-center justify-center border-b border-white/10">
+            <a href="/Admin" class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
+                <span class="material-symbols-outlined">real_estate_agent</span>
+                HanoiHaven
+            </a>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1">
+                <li>
+                    <a href="/Admin" class="flex items-center gap-3 px-6 py-3 bg-white/10 border-l-4 border-secondary text-white transition-colors">
+                        <span class="material-symbols-outlined icon-filled">dashboard</span>
+                        <span class="font-medium">Tổng quan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">group</span>
+                        <span class="font-medium">Quản lý người dùng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                        <span class="material-symbols-outlined">article</span>
+                        <span class="font-medium">Quản lý bài đăng</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="p-4 border-t border-white/10">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="flex items-center justify-center gap-2 w-full px-4 py-2 bg-white/10 hover:bg-red-500/80 text-white rounded-lg transition-colors font-medium">
+                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                    Đăng xuất
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="flex-1 flex flex-col h-screen overflow-hidden">
+        
+        <header class="h-16 bg-white shadow-sm flex items-center justify-between px-6 z-10">
+            <div class="flex items-center gap-4">
+                <h1 class="text-xl font-semibold text-gray-800">@ViewData["Title"]</h1>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button class="p-2 text-gray-400 hover:text-primary transition-colors relative">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
+                <div class="flex items-center gap-3 pl-4 border-l border-gray-200">
+                    <div class="text-right hidden md:block">
+                        <p class="text-sm font-semibold text-gray-700 leading-none">@User.Identity.Name</p>
+                        <p class="text-xs text-gray-500 mt-1">Quản trị viên</p>
+                    </div>
+                    <div class="w-9 h-9 rounded-full bg-secondary text-white flex items-center justify-center font-bold">
+                        A
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 p-6">
+            @RenderBody()
+        </main>
+        
+    </div>
+
+</body>
+</html>
