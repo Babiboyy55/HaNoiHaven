@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using nhatro.Models;
 
@@ -11,9 +12,11 @@ using nhatro.Models;
 namespace nhatro.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260528011601_AddRoomListingTable")]
+    partial class AddRoomListingTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -224,66 +227,6 @@ namespace nhatro.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("nhatro.Models.Room", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("OwnerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PropertyType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("RentPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("RoomName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenantName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("TenantPhone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Rooms");
-                });
-
-            modelBuilder.Entity("nhatro.Models.RoomImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ImageUrl")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("RoomListingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomListingId");
-
-                    b.ToTable("RoomImages");
-                });
-
             modelBuilder.Entity("nhatro.Models.RoomListing", b =>
                 {
                     b.Property<int>("Id")
@@ -372,22 +315,6 @@ namespace nhatro.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("nhatro.Models.RoomImage", b =>
-                {
-                    b.HasOne("nhatro.Models.RoomListing", "RoomListing")
-                        .WithMany("RoomImages")
-                        .HasForeignKey("RoomListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoomListing");
-                });
-
-            modelBuilder.Entity("nhatro.Models.RoomListing", b =>
-                {
-                    b.Navigation("RoomImages");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,113 @@
+@model IEnumerable<nhatro.Models.Room>
+@{
+    ViewData["Title"] = "Nhà/Phòng cho thuê";
+}
+
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-end mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Quản lý Tài sản & Phòng trọ</h1>
+            <p class="text-gray-500 text-sm mt-1">Sơ đồ tình trạng các phòng và thông tin khách thuê.</p>
+        </div>
+        <div class="flex gap-3">
+            <button class="px-4 py-2 bg-white border border-gray-200 text-gray-600 rounded-lg font-medium hover:bg-gray-50 flex items-center gap-2 transition-colors">
+                <span class="material-symbols-outlined text-[20px]">filter_list</span>
+                Lọc trạng thái
+            </button>
+            <a asp-action="CreateRoom" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-2 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
+                <span class="material-symbols-outlined text-[20px]">add_home</span>
+                Thêm phòng mới
+            </a>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        
+        @if (!Model.Any())
+        {
+            <div class="col-span-full py-16 text-center text-gray-400 bg-white rounded-2xl border border-dashed border-gray-300">
+                <span class="material-symbols-outlined text-[48px] mb-2">meeting_room</span>
+                <p>Bạn chưa thêm phòng trọ/nhà nào vào hệ thống.</p>
+                <p class="text-sm mt-1">Bấm "Thêm phòng mới" để bắt đầu thiết lập sơ đồ.</p>
+            </div>
+        }
+        else
+        {
+            foreach (var room in Model)
+            {
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 flex flex-col h-full hover:shadow-md transition-shadow relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-1 
+                        @(room.Status == "Trống" ? "bg-green-500" : (room.Status == "Đang thuê" ? "bg-gray-400" : "bg-orange-500"))">
+                    </div>
+
+                    <div class="flex justify-between items-start mb-4 mt-2">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-800">@room.RoomName</h3>
+                            <p class="text-xs text-gray-500">@room.PropertyType</p>
+                        </div>
+                        
+                        @if (room.Status == "Trống")
+                        {
+                            <span class="px-2.5 py-1 bg-green-50 text-green-600 text-xs font-bold rounded-md flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Trống
+                            </span>
+                        }
+                        else if (room.Status == "Đang thuê")
+                        {
+                            <span class="px-2.5 py-1 bg-gray-100 text-gray-600 text-xs font-bold rounded-md flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Đang thuê
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="px-2.5 py-1 bg-orange-50 text-orange-600 text-xs font-bold rounded-md flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-orange-500"></span> Bảo trì
+                            </span>
+                        }
+                    </div>
+
+                    <div class="flex-1">
+                        <div class="mb-4">
+                            <p class="text-xs font-medium text-gray-400 mb-1">Giá thu / Tháng</p>
+                            <p class="font-semibold text-[#136A64]">@room.RentPrice.ToString("N0") đ</p>
+                        </div>
+
+                        <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                            <p class="text-xs font-medium text-gray-400 mb-1">Người đang thuê</p>
+                            @if (!string.IsNullOrEmpty(room.TenantName))
+                            {
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 rounded-full bg-[#002045] text-white flex items-center justify-center text-[10px] font-bold">
+                                        @room.TenantName.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <p class="text-sm font-semibold text-gray-700 truncate">@room.TenantName</p>
+                                        <p class="text-xs text-gray-500">@room.TenantPhone</p>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <p class="text-sm text-gray-500 italic">Chưa có dữ liệu khách</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="mt-5 pt-4 border-t border-gray-50 flex gap-2">
+                        <!-- Nút Cập nhật -->
+                        <a asp-action="EditRoom" asp-route-id="@room.Id" class="flex-1 py-2 text-center bg-gray-50 hover:bg-blue-50 text-gray-600 hover:text-blue-600 text-sm font-medium rounded-lg transition-colors">
+                            Cập nhật
+                        </a>
+                        
+                        <!-- Nút Xóa (Dùng form post để bảo mật) -->
+                        <form asp-action="DeleteRoom" asp-route-id="@room.Id" method="post" class="m-0 p-0" onsubmit="return confirm('Cảnh báo: Bạn có chắc chắn muốn xóa phòng này khỏi sơ đồ?');">
+                            <button type="submit" class="w-10 h-10 bg-gray-50 hover:bg-red-50 text-gray-600 hover:text-red-600 rounded-lg flex items-center justify-center transition-colors" title="Xóa phòng">
+                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

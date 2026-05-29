@@ -1,3 +1,4 @@
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 <!DOCTYPE html>
 <html class="dark" lang="en">
 <head>
@@ -168,17 +169,30 @@
 
                     @if (User.Identity != null && User.Identity.IsAuthenticated)
                     {
-                        <button class="text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-variant relative">
+                        <button class="hidden md:block text-on-surface-variant hover:text-secondary transition-colors p-2 rounded-full hover:bg-surface-variant relative">
                             <span class="material-symbols-outlined text-[22px]">notifications</span>
                             <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full"></span>
                         </button>
-                        <a href="#" class="hidden md:flex items-center justify-center bg-secondary text-on-secondary px-4 py-2 rounded-lg font-label-md hover:bg-secondary/90 transition-colors shadow-sm whitespace-nowrap">
+
+                        <a href="/Owner/Create" class="hidden md:flex items-center justify-center bg-secondary text-on-secondary px-4 py-2 rounded-lg font-label-md hover:bg-secondary/90 transition-colors shadow-sm whitespace-nowrap">
                             Đăng tin
                         </a>
-                        <div class="relative group cursor-pointer">
-                            <button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:border-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/50 shrink-0">
-                                <img alt="User profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAv9ZJOLq6Ud8YK8s7ok1okjOMtpky8rovzmYukAZFbqdxpFjF_AuyXZ4JeMd8LlMMBjIc5c11C0LdlJgydhfZACFnNMFU9RgQmUntyPzEnh7jyZ-NiT7L9do4y8vZ06D-XcMP44sMRFdAuR734TYZ-T926UhV_KUnx3avVoXD3e0v2GVYrqHvr1rTwvDhUKkQV7I9whGYiueRhbb8Ntgz6nWY_4Hbr16XS_5UPkWK9_2HDNjThSPXZy6Kak8W6tZyG_sDiOv2VNgqc"/>
-                            </button>
+
+                        <div class="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant/50 ml-1">
+                            
+                            <div class="relative group cursor-pointer hidden sm:block">
+                                <button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:border-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/50 shrink-0">
+                                    <img alt="User profile" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=@User.Identity.Name&background=002045&color=fff"/>
+                                </button>
+                            </div>
+                            
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
+                                <button type="submit" class="flex items-center gap-1 text-error hover:text-error-container font-title-md text-[15px] transition-colors font-semibold px-2 py-1 rounded-md hover:bg-error/10">
+                                    <span class="material-symbols-outlined text-[20px]">logout</span>
+                                    Đăng xuất
+                                </button>
+                            </form>
+                            
                         </div>
                     }
                     else

@@ -1,0 +1,130 @@
+@model IEnumerable<nhatro.Models.RoomListing>
+@{
+    ViewData["Title"] = "Quản lý bài đăng";
+}
+
+<div class="max-w-6xl mx-auto">
+    
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800">Danh sách bài đăng</h1>
+            <p class="text-gray-500 text-sm mt-1">Quản lý các tin đăng cho thuê phòng của bạn trên hệ thống.</p>
+        </div>
+        <a asp-action="Create" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Tạo bài đăng mới
+        </a>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+        
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 border-b border-gray-100 text-gray-500 text-sm">
+                        <th class="px-6 py-4 font-semibold">Thông tin tin đăng</th>
+                        <th class="px-6 py-4 font-semibold">Giá & Diện tích</th>
+                        <th class="px-6 py-4 font-semibold">Trạng thái</th>
+                        <th class="px-6 py-4 font-semibold text-right">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="px-6 py-12 text-center text-gray-400">
+                                <span class="material-symbols-outlined text-[48px] mb-2">article</span>
+                                <p>Bạn chưa có bài đăng nào.</p>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-gray-50 transition-colors group">
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-16 h-16 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                                            @if (!string.IsNullOrEmpty(item.ImageUrl))
+                                            {
+                                                <img src="@item.ImageUrl" alt="@item.Title" class="w-full h-full object-cover" />
+                                            }
+                                            else
+                                            {
+                                                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                                                    <span class="material-symbols-outlined">image</span>
+                                                </div>
+                                            }
+                                        </div>
+                                        <div>
+                                            <h4 class="font-bold text-gray-800 text-sm line-clamp-1">@item.Title</h4>
+                                            <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                                <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                                @item.Location
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-[#136A64]">@item.Price.ToString("N0") đ</div>
+                                    <div class="text-xs text-gray-500 mt-0.5">@item.Area m²</div>
+                                </td>
+                                
+                                <td class="px-6 py-4">
+                                    @if (item.StatusBadge == "Đã đăng")
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-[#136A64]"></span> @item.StatusBadge
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="inline-flex items-center gap-1.5 bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span> @item.StatusBadge
+                                        </span>
+                                    }
+                                </td>
+                                
+                                <td class="px-6 py-4 text-right">
+                                    <div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center hover:bg-blue-100 transition-colors" title="Chỉnh sửa">
+                                            <span class="material-symbols-outlined text-[18px]">edit</span>
+                                        </a>
+
+                                        <form asp-action="ToggleVisibility" asp-route-id="@item.Id" method="post" class="m-0 p-0">
+                                            <button type="submit" class="w-8 h-8 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors" title="@(item.StatusBadge == "Đã đăng" ? "Ẩn bài đăng" : "Hiện bài đăng")">
+                                                <span class="material-symbols-outlined text-[18px]">
+                                                    @(item.StatusBadge == "Đã đăng" ? "visibility_off" : "visibility")
+                                                </span>
+                                            </button>
+                                        </form>
+
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="m-0 p-0" onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài đăng này vĩnh viễn?');">
+                                            <button type="submit" class="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center hover:bg-red-100 transition-colors" title="Xóa">
+                                                <span class="material-symbols-outlined text-[18px]">delete</span>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="p-4 border-t border-gray-50 flex items-center justify-between text-sm text-gray-500">
+            <span>Hiển thị @Model.Count() bài đăng</span>
+            <div class="flex gap-1">
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-200 hover:bg-gray-50 disabled:opacity-50"><span class="material-symbols-outlined text-[18px]">chevron_left</span></button>
+                <button class="w-8 h-8 flex items-center justify-center rounded bg-[#136A64] text-white font-medium">1</button>
+                <button class="w-8 h-8 flex items-center justify-center rounded border border-gray-200 hover:bg-gray-50 disabled:opacity-50"><span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+            </div>
+        </div>
+    </div>
+</div>

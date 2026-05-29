@@ -19,81 +19,105 @@ build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
 build_property.RootNamespace = nhatro
 build_property.RootNamespace = nhatro
-build_property.ProjectDir = E:\Hoang Phong\HaNoiHaven\nhatro\
+build_property.ProjectDir = D:\project\HaNoiHaven\nhatro\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = E:\Hoang Phong\HaNoiHaven\nhatro
+build_property.MSBuildProjectDirectory = D:\project\HaNoiHaven\nhatro
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Account/Login.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Account/Register.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Admin/Index.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Admin/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Admin/_ViewStart.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Admin/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Home/Explore.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Home/Explore.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxFeHBsb3JlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Home/Index.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Home/Privacy.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Owner/Index.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Owner/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/CreateRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcQ3JlYXRlUm9vbS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/EditRoom.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcRWRpdFJvb20uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Owner/_ViewStart.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Owner/ManageListings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWFuYWdlTGlzdGluZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/ManageRooms.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWFuYWdlUm9vbXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/project/HaNoiHaven/nhatro/Views/Owner/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/Error.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/_AdminLayout.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/_AdminLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BZG1pbkxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/_OwnerLayout.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/_OwnerLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Pd25lckxheW91dC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/_RoomCard.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/_RoomCard.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Sb29tQ2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/_ValidationScriptsPartial.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/_ViewImports.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/_ViewStart.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/Hoang Phong/HaNoiHaven/nhatro/Views/Shared/_Layout.cshtml]
+[D:/project/HaNoiHaven/nhatro/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-3vy0se4hpc

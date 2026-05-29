@@ -11,6 +11,8 @@ namespace nhatro.Models
         }
 
         // Khai báo các bảng khác của bạn ở đây (ví dụ: RoomListing)
-        // public DbSet<RoomListing> RoomListings { get; set; }
+        public DbSet<RoomListing> RoomListings { get; set; }
+        public DbSet<RoomImage> RoomImages { get; set; }
+        public DbSet<Room> Rooms { get; set; }
     }
 }

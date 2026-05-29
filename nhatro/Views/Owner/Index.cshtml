@@ -5,7 +5,7 @@
 <div class="max-w-6xl mx-auto">
     
     <div class="flex justify-end mb-8">
-        <a href="#" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
+        <a asp-action="Create" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
             Thêm tin đăng mới
         </a>
     </div>
@@ -18,17 +18,23 @@
                 </div>
                 <span class="bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">+2 tuần này</span>
             </div>
-            <div class="text-4xl font-black text-[#002045]">12</div>
+            <div>
+                <p class="text-sm font-medium text-gray-500 mb-1">Tin đang hiển thị</p>
+                <div class="text-4xl font-black text-[#002045]">12</div>
+            </div>
         </div>
 
-        <div class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 flex flex-col justify-between h-40">
+        <div class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 flex flex-col justify-between h-40 relative overflow-hidden">
             <div class="flex justify-between items-start">
-                <div class="w-10 h-10 rounded-lg bg-[#8B5A2B] text-white flex items-center justify-center">
+                <div class="w-10 h-10 rounded-lg bg-[#8B5A2B] text-white flex items-center justify-center relative z-10">
                     <span class="material-symbols-outlined">hourglass_empty</span>
                 </div>
-                <div class="w-8 h-8 rounded-full bg-[#FFE4C4]/40 absolute top-6 right-6 -z-10 blur-md"></div>
+                <div class="w-16 h-16 rounded-full bg-[#FFE4C4]/60 absolute top-2 right-2 blur-xl"></div>
             </div>
-            <div class="text-4xl font-black text-[#002045]">5</div>
+            <div class="relative z-10">
+                <p class="text-sm font-medium text-gray-500 mb-1">Lịch hẹn chờ duyệt</p>
+                <div class="text-4xl font-black text-[#002045]">5</div>
+            </div>
         </div>
 
         <div class="bg-[#002045] rounded-2xl p-6 shadow-md flex flex-col justify-between h-40 relative overflow-hidden">
@@ -38,9 +44,12 @@
                     <span class="material-symbols-outlined">account_balance_wallet</span>
                 </div>
             </div>
-            <div class="relative z-10 flex items-baseline gap-1">
-                <div class="text-4xl font-black text-white">24.5M</div>
-                <div class="text-white/70 font-medium text-sm">VND</div>
+            <div class="relative z-10">
+                <p class="text-sm font-medium text-white/70 mb-1">Doanh thu dự kiến</p>
+                <div class="flex items-baseline gap-1">
+                    <div class="text-4xl font-black text-white">24.5M</div>
+                    <div class="text-white/70 font-medium text-sm">VND</div>
+                </div>
             </div>
         </div>
     </div>

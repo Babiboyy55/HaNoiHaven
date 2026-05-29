@@ -27,14 +27,25 @@
             </div>
         </div>
 
+        @{
+            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+        }
+
         <nav class="flex-1 px-4 mt-6 space-y-2 overflow-y-auto">
-            <a href="/Owner" class="flex items-center gap-3 px-4 py-3 bg-[#a2eded]/50 text-[#13696a] rounded-xl font-semibold transition-colors">
-                <span class="material-symbols-outlined icon-filled">dashboard_customize</span>
+            <a href="/Owner" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "Index" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "Index" ? "icon-filled" : "")">dashboard</span>
                 Tổng quan
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
-                <span class="material-symbols-outlined">home</span>
+            <a href="/Owner/ManageRooms" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "ManageRooms" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "ManageRooms" ? "icon-filled" : "")">home</span>
                 Nhà/Phòng cho thuê
+            </a>
+            <a href="/Owner/ManageListings" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "ManageListings" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "ManageListings" ? "icon-filled" : "")">article</span>
+                Quản lý bài đăng
             </a>
             <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
                 <span class="material-symbols-outlined">calendar_month</span>
@@ -67,6 +78,8 @@
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white p-8 md:p-12">
         @RenderBody()
     </main>
+
+    @await RenderSectionAsync("Scripts", required: false)
 
 </body>
 </html>
