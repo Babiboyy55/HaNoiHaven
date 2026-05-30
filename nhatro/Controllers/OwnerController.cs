@@ -27,9 +27,39 @@ namespace nhatro.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            // 1. Số tin đăng hoạt động ("Đã đăng")
+            var activeListingsCount = await _context.RoomListings
+                .Where(r => r.OwnerId == user.Id && r.StatusBadge == "Đã đăng")
+                .CountAsync();
+
+            // 2. Số phòng vật lý đang trống
+            var vacantRoomsCount = await _context.Rooms
+                .Where(r => r.OwnerId == user.Id && r.Status == "Trống")
+                .CountAsync();
+
+            // 3. Doanh thu dự kiến từ các phòng đang cho thuê
+            var expectedRevenue = await _context.Rooms
+                .Where(r => r.OwnerId == user.Id && r.Status == "Đang thuê")
+                .SumAsync(r => r.RentPrice);
+
+            // 4. Lấy danh sách 5 bài đăng tin gần đây nhất của Chủ trọ này
+            var recentListings = await _context.RoomListings
+                .Where(r => r.OwnerId == user.Id)
+                .OrderByDescending(r => r.Id)
+                .Take(5)
+                .ToListAsync();
+
+            ViewData["ActiveListingsCount"] = activeListingsCount;
+            ViewData["VacantRoomsCount"] = vacantRoomsCount;
+            ViewData["ExpectedRevenue"] = expectedRevenue;
+
+            return View(recentListings);
         }
 
         [HttpGet]

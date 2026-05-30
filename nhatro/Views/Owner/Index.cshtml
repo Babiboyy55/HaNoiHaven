@@ -1,125 +1,158 @@
+@model IEnumerable<nhatro.Models.RoomListing>
 @{
     ViewData["Title"] = "Tổng quan";
+    var activeListingsCount = ViewData["ActiveListingsCount"] as int? ?? 0;
+    var vacantRoomsCount = ViewData["VacantRoomsCount"] as int? ?? 0;
+    var expectedRevenue = ViewData["ExpectedRevenue"] as decimal? ?? 0;
 }
 
-<div class="max-w-6xl mx-auto">
-    
-    <div class="flex justify-end mb-8">
-        <a asp-action="Create" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-6 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
-            Thêm tin đăng mới
-        </a>
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-8 gap-4 flex-wrap">
+        <div>
+            <h2 class="text-2xl font-bold text-[#002045]">Bảng điều khiển Chủ trọ</h2>
+            <p class="text-sm text-gray-500">Theo dõi hoạt động kinh doanh nhà trọ của bạn</p>
+        </div>
+        <div class="flex gap-2">
+            <a asp-action="ManageListings" class="border border-gray-300 hover:bg-gray-50 text-gray-700 px-5 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
+                Quản lý tin đăng
+            </a>
+            <a asp-action="Create" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-2.5 rounded-lg font-medium shadow-sm transition-colors flex items-center gap-2">
+                Thêm tin đăng mới
+            </a>
+        </div>
     </div>
 
+    <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Active Listings -->
         <div class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 flex flex-col justify-between h-40">
             <div class="flex justify-between items-start">
                 <div class="w-10 h-10 rounded-lg bg-[#002045] text-white flex items-center justify-center">
                     <span class="material-symbols-outlined">real_estate_agent</span>
                 </div>
-                <span class="bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">+2 tuần này</span>
+                <span class="bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">Đang hiển thị</span>
             </div>
             <div>
                 <p class="text-sm font-medium text-gray-500 mb-1">Tin đang hiển thị</p>
-                <div class="text-4xl font-black text-[#002045]">12</div>
+                <div class="text-4xl font-black text-[#002045]">@activeListingsCount</div>
             </div>
         </div>
 
+        <!-- Vacant Rooms -->
         <div class="bg-white rounded-2xl p-6 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07)] border border-gray-100 flex flex-col justify-between h-40 relative overflow-hidden">
             <div class="flex justify-between items-start">
                 <div class="w-10 h-10 rounded-lg bg-[#8B5A2B] text-white flex items-center justify-center relative z-10">
-                    <span class="material-symbols-outlined">hourglass_empty</span>
+                    <span class="material-symbols-outlined">meeting_room</span>
                 </div>
-                <div class="w-16 h-16 rounded-full bg-[#FFE4C4]/60 absolute top-2 right-2 blur-xl"></div>
+                <span class="bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full relative z-10">Cần cho thuê</span>
             </div>
             <div class="relative z-10">
-                <p class="text-sm font-medium text-gray-500 mb-1">Lịch hẹn chờ duyệt</p>
-                <div class="text-4xl font-black text-[#002045]">5</div>
+                <p class="text-sm font-medium text-gray-500 mb-1">Số phòng vật lý trống</p>
+                <div class="text-4xl font-black text-[#002045]">@vacantRoomsCount</div>
             </div>
         </div>
 
+        <!-- Expected Revenue -->
         <div class="bg-[#002045] rounded-2xl p-6 shadow-md flex flex-col justify-between h-40 relative overflow-hidden">
             <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full"></div>
             <div class="flex justify-between items-start relative z-10">
                 <div class="w-10 h-10 rounded-lg bg-white/10 text-white flex items-center justify-center backdrop-blur-sm">
                     <span class="material-symbols-outlined">account_balance_wallet</span>
                 </div>
+                <span class="bg-white/10 text-white text-xs font-bold px-2.5 py-1 rounded-full">Tháng này</span>
             </div>
             <div class="relative z-10">
                 <p class="text-sm font-medium text-white/70 mb-1">Doanh thu dự kiến</p>
                 <div class="flex items-baseline gap-1">
-                    <div class="text-4xl font-black text-white">24.5M</div>
-                    <div class="text-white/70 font-medium text-sm">VND</div>
+                    <div class="text-3xl font-black text-white">@expectedRevenue.ToString("N0")</div>
+                    <div class="text-white/70 font-medium text-sm">VNĐ</div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Recent Listings Section -->
     <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
-        <div class="flex justify-end p-4 border-b border-gray-50">
-            <a href="#" class="text-sm font-semibold text-gray-500 hover:text-gray-800">Xem tất cả</a>
+        <div class="flex justify-between items-center p-5 border-b border-gray-100 bg-gray-50/50">
+            <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">list_alt</span> Bài viết gần đây nhất
+            </h3>
+            <a asp-action="ManageListings" class="text-sm font-semibold text-secondary hover:text-[#0f544f] hover:underline">Xem tất cả bài đăng</a>
         </div>
         
-        <div class="divide-y divide-gray-50">
-            <div class="p-4 flex items-center hover:bg-gray-50 transition-colors">
-                <div class="flex-1 flex items-center gap-4">
-                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&q=80&w=100&h=100" class="w-14 h-14 rounded-lg object-cover">
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm">Modern Studio in Tay Ho</h4>
-                        <p class="text-xs text-gray-500 mt-0.5">Tay Ho District</p>
+        <div class="divide-y divide-gray-100">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var room in Model)
+                {
+                    <div class="p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-gray-50 transition-colors">
+                        <div class="flex-1 flex items-center gap-4">
+                            @if (!string.IsNullOrEmpty(room.ImageUrl))
+                            {
+                                <img src="@room.ImageUrl" class="w-14 h-14 rounded-lg object-cover border border-gray-100 flex-shrink-0" alt="Bìa phòng">
+                            }
+                            else
+                            {
+                                <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300 flex-shrink-0">
+                                    <span class="material-symbols-outlined">image</span>
+                                </div>
+                            }
+                            <div>
+                                <h4 class="font-bold text-gray-800 text-sm hover:text-secondary transition-colors">
+                                    <a href="@Url.Action("Detail", "Home", new { id = room.Id })">@room.Title</a>
+                                </h4>
+                                <p class="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[14px]">location_on</span> @room.Location
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6 w-full sm:w-auto justify-between sm:justify-end">
+                            <div class="w-28 text-left sm:text-center">
+                                @if (room.StatusBadge == "Đã đăng")
+                                {
+                                    <span class="inline-flex items-center gap-1.5 bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-[#136A64]"></span> Đã đăng
+                                    </span>
+                                }
+                                else if (room.StatusBadge == "Đã ẩn")
+                                {
+                                    <span class="inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Đã ẩn
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="inline-flex items-center gap-1.5 bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span> @(room.StatusBadge ?? "Bản nháp")
+                                    </span>
+                                }
+                            </div>
+                            
+                            <div class="w-32 font-bold text-gray-800 text-sm text-right">
+                                @room.Price.ToString("N0") <span class="text-xs font-normal text-gray-500">đ</span>
+                            </div>
+                            
+                            <div class="w-20 flex justify-end gap-3 text-gray-400">
+                                <a asp-action="Edit" asp-route-id="@room.Id" class="hover:text-secondary transition-colors" title="Sửa bài"><span class="material-symbols-outlined text-[20px]">edit</span></a>
+                                <form asp-action="ToggleVisibility" asp-route-id="@room.Id" method="post" class="inline">
+                                    <button type="submit" class="hover:text-gray-800 transition-colors" title="Ẩn/Hiện bài">
+                                        <span class="material-symbols-outlined text-[20px]">@(room.StatusBadge == "Đã đăng" ? "visibility_off" : "visibility")</span>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                }
+            }
+            else
+            {
+                <div class="p-8 text-center text-gray-400 flex flex-col items-center justify-center">
+                    <span class="material-symbols-outlined text-[48px] mb-2">post_add</span>
+                    <p class="font-medium">Bạn chưa đăng tin phòng trọ nào.</p>
+                    <a asp-action="Create" class="text-secondary font-semibold hover:underline mt-2 text-sm">Tạo tin đăng đầu tiên của bạn ngay!</a>
                 </div>
-                <div class="w-32">
-                    <span class="inline-flex items-center gap-1.5 bg-[#a2eded]/40 text-[#136A64] text-xs font-bold px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 rounded-full bg-[#136A64]"></span> Đã đăng
-                    </span>
-                </div>
-                <div class="w-32 font-medium text-gray-700 text-sm">8,500,000</div>
-                <div class="w-20 flex justify-end gap-2 text-gray-400">
-                    <button class="hover:text-gray-800"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                    <button class="hover:text-gray-800"><span class="material-symbols-outlined text-[20px]">visibility_off</span></button>
-                </div>
-            </div>
-
-            <div class="p-4 flex items-center hover:bg-gray-50 transition-colors">
-                <div class="flex-1 flex items-center gap-4">
-                    <img src="https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&q=80&w=100&h=100" class="w-14 h-14 rounded-lg object-cover">
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm">Cozy Room near Hoan Kiem</h4>
-                        <p class="text-xs text-gray-500 mt-0.5">Hoan Kiem District</p>
-                    </div>
-                </div>
-                <div class="w-32">
-                    <span class="inline-flex items-center gap-1.5 bg-gray-100 text-gray-600 text-xs font-bold px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 rounded-full bg-gray-500"></span> Đã cho thuê
-                    </span>
-                </div>
-                <div class="w-32 font-medium text-gray-700 text-sm">6,000,000</div>
-                <div class="w-20 flex justify-end gap-2 text-gray-400">
-                    <button class="hover:text-gray-800"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                </div>
-            </div>
-
-            <div class="p-4 flex items-center hover:bg-gray-50 transition-colors">
-                <div class="flex-1 flex items-center gap-4">
-                    <div class="w-14 h-14 rounded-lg bg-gray-100 flex items-center justify-center text-gray-300">
-                        <span class="material-symbols-outlined">image</span>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-gray-800 text-sm">Spacious Balcony Apt</h4>
-                        <p class="text-xs text-gray-500 mt-0.5">Ba Dinh District</p>
-                    </div>
-                </div>
-                <div class="w-32">
-                    <span class="inline-flex items-center gap-1.5 bg-orange-50 text-orange-600 text-xs font-bold px-2.5 py-1 rounded-full">
-                        <span class="w-1.5 h-1.5 rounded-full bg-orange-600"></span> Bản nháp
-                    </span>
-                </div>
-                <div class="w-32 font-medium text-gray-400 italic text-sm">Chưa thiết lập</div>
-                <div class="w-20 flex justify-end gap-2 text-gray-400">
-                    <button class="hover:text-gray-800"><span class="material-symbols-outlined text-[20px]">edit</span></button>
-                    <button class="hover:text-gray-800"><span class="material-symbols-outlined text-[20px]">upload</span></button>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </div>

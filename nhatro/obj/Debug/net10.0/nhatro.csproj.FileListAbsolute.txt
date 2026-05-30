@@ -674,3 +674,5 @@ D:\project\HaNoiHaven\nhatro\obj\Debug\net10.0\refint\nhatro.dll
 D:\project\HaNoiHaven\nhatro\obj\Debug\net10.0\nhatro.pdb
 D:\project\HaNoiHaven\nhatro\obj\Debug\net10.0\nhatro.genruntimeconfig.cache
 D:\project\HaNoiHaven\nhatro\obj\Debug\net10.0\ref\nhatro.dll
+C:\Users\Asus\source\repos\nhatro\nhatro\bin\Debug\net10.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Asus\source\repos\nhatro\nhatro\obj\Debug\net10.0\nhatro.sourcelink.json

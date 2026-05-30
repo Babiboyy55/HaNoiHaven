@@ -13,5 +13,7 @@ namespace nhatro.Services
             string[]? roomTypes = null,
             string[]? amenities = null,
             string? distance = null);
+
+        Task<RoomListing?> GetRoomByIdAsync(int id);
     }
 }

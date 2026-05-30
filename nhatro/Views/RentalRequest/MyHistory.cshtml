@@ -1,0 +1,125 @@
+@model List<nhatro.Models.RentalRequest>
+@{
+    ViewData["Title"] = "Lịch Sử Hẹn Xem Phòng";
+}
+
+<div class="w-full max-w-4xl mx-auto px-4 py-10 flex-grow">
+    <div class="mb-8">
+        <h1 class="text-2xl md:text-3xl font-bold text-primary">📋 Lịch sử Yêu Cầu của Tôi</h1>
+        <p class="text-on-surface-variant mt-1">Theo dõi trạng thái các lịch hẹn xem phòng bạn đã gửi</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="bg-surface-container rounded-2xl border border-outline-variant/30 p-12 text-center">
+            <div class="text-6xl mb-4">🏡</div>
+            <h3 class="text-xl font-semibold text-primary mb-2">Chưa có yêu cầu nào</h3>
+            <p class="text-on-surface-variant mb-6">Bạn chưa gửi yêu cầu hẹn xem phòng nào. Hãy khám phá các phòng trọ trên HanoiHaven!</p>
+            <a href="@Url.Action("Explore", "Home")"
+               class="inline-flex items-center gap-2 bg-primary text-white px-6 py-3 rounded-xl font-semibold hover:bg-primary/90 transition-colors">
+                <span class="material-symbols-outlined text-[18px]">explore</span>
+                Khám phá phòng trọ
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="space-y-4">
+            @foreach (var request in Model)
+            {
+                var statusClass = request.Status switch
+                {
+                    "Đã duyệt" => "bg-green-100 text-green-800 border-green-200",
+                    "Đã từ chối" => "bg-red-100 text-red-800 border-red-200",
+                    "Đã hủy" => "bg-gray-100 text-gray-600 border-gray-200",
+                    _ => "bg-amber-100 text-amber-800 border-amber-200"
+                };
+                var statusIcon = request.Status switch
+                {
+                    "Đã duyệt" => "check_circle",
+                    "Đã từ chối" => "cancel",
+                    "Đã hủy" => "block",
+                    _ => "pending"
+                };
+
+                <div class="bg-surface-container-lowest rounded-2xl border border-outline-variant/30 p-6 hover:shadow-md transition-shadow">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <!-- Room Info -->
+                        <div class="flex gap-4">
+                            <div class="w-14 h-14 rounded-xl overflow-hidden flex-shrink-0 border border-outline-variant/20 bg-surface-container">
+                                @if (request.RoomListing?.ImageUrl != null)
+                                {
+                                    <img src="@request.RoomListing.ImageUrl" alt="Phòng" class="w-full h-full object-cover" />
+                                }
+                                else
+                                {
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <span class="material-symbols-outlined text-[28px] text-outline/40">apartment</span>
+                                    </div>
+                                }
+                            </div>
+                            <div>
+                                @if (request.RoomListing != null)
+                                {
+                                    <a href="@Url.Action("Detail", "Home", new { id = request.RoomListingId })"
+                                       class="font-bold text-primary hover:underline text-base leading-tight">
+                                        @request.RoomListing.Title
+                                    </a>
+                                    <p class="text-sm text-on-surface-variant mt-0.5 flex items-center gap-1">
+                                        <span class="material-symbols-outlined text-[14px]">location_on</span>
+                                        @request.RoomListing.Location
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="font-bold text-primary">Phòng #@request.RoomListingId</p>
+                                }
+                                <p class="text-xs text-outline mt-1">Gửi: @request.CreatedAt.ToString("HH:mm - dd/MM/yyyy")</p>
+                            </div>
+                        </div>
+
+                        <!-- Status -->
+                        <span class="@statusClass border px-3 py-1.5 rounded-full text-xs font-bold flex items-center gap-1 w-fit">
+                            <span class="material-symbols-outlined text-[14px]">@statusIcon</span>
+                            @request.Status
+                        </span>
+                    </div>
+
+                    <!-- Appointment Details -->
+                    <div class="mt-4 bg-surface-container rounded-xl p-4 grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm">
+                        <div>
+                            <p class="text-outline text-xs font-medium mb-0.5">Ngày hẹn</p>
+                            <p class="font-semibold text-primary">@request.PreferredDate.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <div>
+                            <p class="text-outline text-xs font-medium mb-0.5">Khung giờ</p>
+                            <p class="font-semibold text-primary">@request.PreferredTime</p>
+                        </div>
+                        @if (!string.IsNullOrEmpty(request.Message))
+                        {
+                            <div class="col-span-2 sm:col-span-1">
+                                <p class="text-outline text-xs font-medium mb-0.5">Lời nhắn</p>
+                                <p class="text-on-surface-variant italic text-xs">@request.Message</p>
+                            </div>
+                        }
+                    </div>
+
+                    @if (request.Status == "Đã duyệt")
+                    {
+                        <div class="mt-3 bg-green-50 border border-green-200 rounded-xl p-3 flex items-center gap-2 text-sm text-green-800">
+                            <span class="material-symbols-outlined text-[18px] text-green-600">celebration</span>
+                            <span>Chủ trọ đã xác nhận lịch hẹn! Vui lòng đến đúng giờ và chuẩn bị CMND/CCCD để xem phòng.</span>
+                        </div>
+                    }
+                    else if (request.Status == "Đã từ chối")
+                    {
+                        <div class="mt-3 bg-red-50 border border-red-200 rounded-xl p-3 flex items-center gap-2 text-sm text-red-800">
+                            <span class="material-symbols-outlined text-[18px] text-red-500">info</span>
+                            <span>Chủ trọ không thể sắp xếp lịch hẹn này. Bạn có thể thử đặt lịch vào thời gian khác.</span>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

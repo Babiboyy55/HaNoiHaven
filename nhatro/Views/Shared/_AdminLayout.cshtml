@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - Admin HanoiHaven</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     
@@ -31,9 +32,9 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden text-gray-800">
-
-    <aside class="w-64 bg-primary text-white flex flex-col transition-all duration-300 z-20">
+<body class="text-gray-800 bg-gray-100" hx-boost="true">
+    <div class="flex h-screen overflow-hidden w-full">
+        <aside class="w-64 bg-primary text-white flex flex-col transition-all duration-300 z-20">
         <div class="h-16 flex items-center justify-center border-b border-white/10">
             <a href="/Admin" class="text-2xl font-bold tracking-tight text-white flex items-center gap-2">
                 <span class="material-symbols-outlined">real_estate_agent</span>
@@ -43,22 +44,37 @@
 
         <nav class="flex-1 overflow-y-auto py-4">
             <ul class="space-y-1">
+                @{
+                    var currentAction = ViewContext.RouteData.Values["Action"]?.ToString() ?? "";
+                }
                 <li>
-                    <a href="/Admin" class="flex items-center gap-3 px-6 py-3 bg-white/10 border-l-4 border-secondary text-white transition-colors">
+                    <a href="/Admin" class="flex items-center gap-3 px-6 py-3 @(currentAction == "Index" ? "bg-white/10 border-l-4 border-secondary text-white" : "border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white") transition-colors">
                         <span class="material-symbols-outlined icon-filled">dashboard</span>
                         <span class="font-medium">Tổng quan</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                    <a href="/Admin/ManageUsers" class="flex items-center gap-3 px-6 py-3 @(currentAction == "ManageUsers" ? "bg-white/10 border-l-4 border-secondary text-white" : "border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white") transition-colors">
                         <span class="material-symbols-outlined">group</span>
                         <span class="font-medium">Quản lý người dùng</span>
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="flex items-center gap-3 px-6 py-3 border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white transition-colors">
+                    <a href="/Admin/ManageListings" class="flex items-center gap-3 px-6 py-3 @(currentAction == "ManageListings" ? "bg-white/10 border-l-4 border-secondary text-white" : "border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white") transition-colors">
                         <span class="material-symbols-outlined">article</span>
                         <span class="font-medium">Quản lý bài đăng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Configurations" class="flex items-center gap-3 px-6 py-3 @(currentAction == "Configurations" ? "bg-white/10 border-l-4 border-secondary text-white" : "border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white") transition-colors">
+                        <span class="material-symbols-outlined">settings</span>
+                        <span class="font-medium">Cấu hình hệ thống</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/Admin/Complaints" class="flex items-center gap-3 px-6 py-3 @(currentAction == "Complaints" ? "bg-white/10 border-l-4 border-secondary text-white" : "border-l-4 border-transparent text-gray-300 hover:bg-white/5 hover:text-white") transition-colors">
+                        <span class="material-symbols-outlined">gavel</span>
+                        <span class="font-medium">Khiếu nại & Tranh chấp</span>
                     </a>
                 </li>
             </ul>
@@ -102,6 +118,7 @@
             @RenderBody()
         </main>
         
+    </div>
     </div>
 
 </body>

@@ -44,17 +44,42 @@ using (var scope = app.Services.CreateScope())
         }
     }
 
-    // 2. Chỉ định tài khoản Admin gốc (Hãy thay bằng Email bạn vừa đăng ký thành công lúc nãy)
-    string adminEmail = "hoangphong05@gmail.com"; 
+    // 2. Chỉ định tài khoản Admin gốc (Tự động tạo nếu chưa tồn tại)
+    string adminEmail = "admin@hanoihaven.com"; 
     var adminUser = await userManager.FindByEmailAsync(adminEmail);
     
-    if (adminUser != null)
+    if (adminUser == null)
+    {
+        adminUser = new ApplicationUser
+        {
+            UserName = adminEmail,
+            Email = adminEmail,
+            FullName = "Quản lý hệ thống",
+            PhoneNumber = "0987654321",
+            EmailConfirmed = true
+        };
+        
+        var result = await userManager.CreateAsync(adminUser, "Admin123456");
+        if (result.Succeeded)
+        {
+            await userManager.AddToRoleAsync(adminUser, "Admin");
+        }
+    }
+    else
     {
         // Kiểm tra xem user này đã có quyền Admin chưa, nếu chưa thì cấp quyền
         if (!await userManager.IsInRoleAsync(adminUser, "Admin"))
         {
             await userManager.AddToRoleAsync(adminUser, "Admin");
         }
+    }
+
+    // Vẫn hỗ trợ tự động cấp quyền Admin cho email hoangphong05@gmail.com nếu đã được đăng ký
+    string fallbackAdminEmail = "hoangphong05@gmail.com"; 
+    var fallbackAdminUser = await userManager.FindByEmailAsync(fallbackAdminEmail);
+    if (fallbackAdminUser != null && !await userManager.IsInRoleAsync(fallbackAdminUser, "Admin"))
+    {
+        await userManager.AddToRoleAsync(fallbackAdminUser, "Admin");
     }
 }
 

@@ -1,0 +1,41 @@
+@model IEnumerable<nhatro.Models.RoomListing>
+@{
+    ViewData["Title"] = "Phòng yêu thích";
+}
+
+<div class="flex-grow w-full max-w-container-max mx-auto px-4 md:px-8 py-8 md:py-12">
+    <!-- Header -->
+    <div class="mb-8 border-b border-outline-variant/30 pb-6">
+        <div class="flex items-center gap-3 mb-2">
+            <span class="material-symbols-outlined text-secondary text-3xl">favorite</span>
+            <h1 class="font-headline-md md:font-headline-lg text-primary tracking-tight">Phòng yêu thích của bạn</h1>
+        </div>
+        <p class="text-on-surface-variant font-body-md mt-2">Bạn đã lưu @Model.Count() phòng. Hãy xem lại và đưa ra quyết định sớm nhé!</p>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="flex flex-col items-center justify-center py-20 bg-surface-container rounded-2xl border border-outline-variant/20 text-center px-4">
+            <div class="w-24 h-24 mb-6 rounded-full bg-secondary-container text-secondary flex items-center justify-center">
+                <span class="material-symbols-outlined text-5xl">heart_broken</span>
+            </div>
+            <h2 class="text-title-xl font-bold text-primary mb-2">Chưa có phòng nào được lưu</h2>
+            <p class="text-on-surface-variant font-body-md max-w-md mb-8">Bạn chưa thêm bất kỳ phòng nào vào danh sách yêu thích. Hãy tiếp tục khám phá và lưu những căn phòng ưng ý nhé!</p>
+            <a href="@Url.Action("Explore", "Home")" class="bg-secondary text-on-secondary px-8 py-3 rounded-xl font-label-lg font-bold hover:bg-secondary/90 transition-all shadow-md hover:shadow-lg focus:ring-2 focus:ring-secondary/50 focus:outline-none">
+                Khám phá ngay
+            </a>
+        </div>
+    }
+    else
+    {
+        <!-- Listings Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="favorites-grid">
+            @foreach (var room in Model)
+            {
+                <div class="favorite-item">
+                    <partial name="_RoomCard" model="room" />
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,71 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Quản lý Danh mục & Cấu hình";
+}
+
+<div class="max-w-4xl mx-auto flex flex-col gap-6">
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+        <div class="p-6 border-b border-gray-100 bg-gray-50/50">
+            <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary">settings_suggest</span> Cấu hình tham số hệ thống
+            </h3>
+            <p class="text-xs text-gray-500 mt-1">Cài đặt các thông số nền tảng của HanoiHaven để vận hành ứng dụng</p>
+        </div>
+
+        <form onsubmit="event.preventDefault(); alert('Cập nhật cấu hình hệ thống thành công!');" class="p-6 flex flex-col gap-6">
+            <!-- Part 1: Pricing Thresholds -->
+            <div>
+                <h4 class="font-bold text-sm text-[#002045] mb-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Phân khúc khoảng giá trị lọc nhanh</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Mức giá thấp nhất (VNĐ)</label>
+                        <input type="number" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-sm focus:border-secondary outline-none font-medium" value="3000000" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Mức giá cao nhất (VNĐ)</label>
+                        <input type="number" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-sm focus:border-secondary outline-none font-medium" value="15000000" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 2: Platform categories -->
+            <div class="border-t border-gray-100 pt-6">
+                <h4 class="font-bold text-sm text-[#002045] mb-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Danh mục Loại hình trọ hỗ trợ</h4>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" checked class="rounded border-gray-300 text-secondary focus:ring-secondary w-4 h-4" />
+                        <span class="text-sm font-medium text-gray-700">Căn hộ Studio (Studio Apartment)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" checked class="rounded border-gray-300 text-secondary focus:ring-secondary w-4 h-4" />
+                        <span class="text-sm font-medium text-gray-700">Phòng trọ khép kín / Phòng ghép (Shared Room)</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <input type="checkbox" checked class="rounded border-gray-300 text-secondary focus:ring-secondary w-4 h-4" />
+                        <span class="text-sm font-medium text-gray-700">Nhà nguyên căn (Whole House)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Part 3: Operational parameters -->
+            <div class="border-t border-gray-100 pt-6">
+                <h4 class="font-bold text-sm text-[#002045] mb-3 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Tham số Phí dịch vụ nền tảng</h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Phí hoa hồng duyệt bài (VNĐ)</label>
+                        <input type="number" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-sm focus:border-secondary outline-none font-medium" value="50000" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Phí dịch vụ hợp đồng thuê (%)</label>
+                        <input type="number" class="w-full bg-gray-50 border border-gray-200 rounded-lg p-2.5 text-sm focus:border-secondary outline-none font-medium" value="1" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-gray-100 pt-6 flex justify-end gap-2">
+                <button type="button" class="border border-gray-300 hover:bg-gray-50 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors">Đặt lại</button>
+                <button type="submit" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-2.5 rounded-lg text-sm font-semibold shadow-sm transition-colors">Lưu cấu hình</button>
+            </div>
+        </form>
+    </div>
+</div>

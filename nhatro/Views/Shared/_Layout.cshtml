@@ -5,8 +5,7 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>@ViewData["Title"] - HanoiHaven</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>    <script src="https://unpkg.com/htmx.org@1.9.12"></script>    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
     <script id="tailwind-config">
         tailwind.config = {
@@ -139,7 +138,8 @@
         }
     </style>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-secondary-container selection:text-on-secondary-container">
+<body class="bg-background text-on-surface font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container" hx-boost="true">
+    <div class="min-h-screen flex flex-col w-full">
     <header class="bg-surface shadow-sm w-full sticky top-0 z-50 transition-all duration-300">
         <div class="flex justify-between items-center w-full px-4 md:px-8 py-3 max-w-container-max mx-auto gap-4">
             <!-- Brand -->
@@ -155,10 +155,29 @@
             <div class="flex items-center gap-3 md:gap-6">
                 <!-- Nav -->
                 <nav class="hidden lg:flex items-center gap-6">
-                    <a aria-current="page" class="text-secondary border-b-2 border-secondary pb-1 font-label-md whitespace-nowrap transition-all" href="@Url.Action("Explore", "Home")">Khám phá</a>
-                    <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Đã lưu</a>
-                    <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Cho thuê</a>
-                    <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Hỗ trợ</a>
+                    @{
+                        var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                    }
+                    <a class="@((currentAction == "Explore" && currentController == "Home") ? "text-secondary border-b-2 border-secondary pb-1 font-label-md" : "text-on-surface-variant hover:text-primary font-body-md") whitespace-nowrap transition-all" href="@Url.Action("Explore", "Home")">Khám phá</a>
+                    
+                    @if (User.Identity != null && User.Identity.IsAuthenticated)
+                    {
+                        <a class="@((currentAction == "Favorites" && currentController == "Home") ? "text-secondary border-b-2 border-secondary pb-1 font-label-md" : "text-on-surface-variant hover:text-primary font-body-md") whitespace-nowrap transition-colors duration-200" href="@Url.Action("Favorites", "Home")">Phòng yêu thích</a>
+                        @if (User.IsInRole("Owner"))
+                        {
+                            <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="/Owner">Quản lý trọ</a>
+                        }
+                        else
+                        {
+                            <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Trở thành Chủ nhà</a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Dành cho Chủ trọ</a>
+                    }
+                    <a class="text-on-surface-variant hover:text-primary font-body-md whitespace-nowrap transition-colors duration-200" href="#">Trợ giúp</a>
                 </nav>
 
                 <!-- Actions -->
@@ -180,20 +199,47 @@
 
                         <div class="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant/50 ml-1">
                             
+                            <!-- User Dropdown Menu -->
                             <div class="relative group cursor-pointer hidden sm:block">
                                 <button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:border-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/50 shrink-0">
                                     <img alt="User profile" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=@User.Identity.Name&background=002045&color=fff"/>
                                 </button>
+                                <!-- Dropdown -->
+                                <div class="absolute right-0 top-full mt-2 w-56 bg-surface-container-lowest rounded-2xl shadow-xl border border-outline-variant/30 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    <div class="px-4 py-3 border-b border-outline-variant/20">
+                                        <p class="text-xs text-outline font-medium">Đã đăng nhập với</p>
+                                        <p class="text-sm font-semibold text-primary truncate">@User.Identity.Name</p>
+                                    </div>
+                                    <a href="/RentalRequest/MyHistory" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">calendar_month</span>
+                                        Lịch hẹn của tôi
+                                    </a>
+                                    @if (User.IsInRole("Owner"))
+                                    {
+                                        <a href="/Owner" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">dashboard</span>
+                                            Kênh Chủ Trọ
+                                        </a>
+                                    }
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="/Admin" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+                                            <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
+                                            Trang Quản Trị
+                                        </a>
+                                    }
+                                    <div class="border-t border-outline-variant/20 mt-1 pt-1">
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
+                                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error/5 transition-colors">
+                                                <span class="material-symbols-outlined text-[18px]">logout</span>
+                                                Đăng xuất
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
-                            
-                            <form asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
-                                <button type="submit" class="flex items-center gap-1 text-error hover:text-error-container font-title-md text-[15px] transition-colors font-semibold px-2 py-1 rounded-md hover:bg-error/10">
-                                    <span class="material-symbols-outlined text-[20px]">logout</span>
-                                    Đăng xuất
-                                </button>
-                            </form>
-                            
                         </div>
+
                     }
                     else
                     {
@@ -229,6 +275,53 @@
         </div>
     </footer>
 
+    <!-- Global Scripts -->
+    <script>
+        function toggleFavorite(btn, event, roomId) {
+            // Ngăn chặn sự kiện click lan sang thẻ a (nếu có)
+            event.preventDefault();
+            event.stopPropagation();
+            
+            const isFavorite = btn.classList.contains('is-favorite');
+            const icon = btn.querySelector('.material-symbols-outlined');
+            
+            // Hiệu ứng bong bóng (Scale giật nội tại)
+            icon.classList.add('scale-125');
+            setTimeout(() => icon.classList.remove('scale-125'), 200);
+
+            if (isFavorite) {
+                // Xử lý Bỏ lưu
+                btn.classList.remove('text-error', 'is-favorite');
+                btn.classList.add('text-on-surface');
+                icon.classList.remove('icon-filled');
+                icon.innerText = 'favorite_border';
+                
+                // Nếu đang ở trang Favorites, ẩn luôn thẻ phòng chứa nút này đi để mô phỏng "phòng bay màu"
+                if (window.location.pathname.toLowerCase().includes('favorites')) {
+                    const card = btn.closest('article');
+                    if (card) {
+                        card.closest('.favorite-item').style.transition = "all 0.4s ease";
+                        card.closest('.favorite-item').style.opacity = "0";
+                        card.closest('.favorite-item').style.transform = "scale(0.9)";
+                        setTimeout(() => {
+                            card.closest('.favorite-item').style.display = "none";
+                            // Tùy chọn: Show thông báo rỗng nếu grid không còn item nào (Mockup logic)
+                        }, 400); 
+                    }
+                }
+                // TODO: Gọi API AJAX báo server đã gỡ roomId khỏi danh sách
+            } else {
+                // Xử lý Lưu
+                btn.classList.remove('text-on-surface');
+                btn.classList.add('text-error', 'is-favorite');
+                icon.classList.add('icon-filled');
+                icon.innerText = 'favorite';
+                // TODO: Gọi API AJAX báo server lưu roomId
+            }
+        }
+    </script>
+    
     @await RenderSectionAsync("Scripts", required: false)
+    </div>
 </body>
 </html>

@@ -6,10 +6,10 @@
 <div class="flex-grow flex flex-col md:flex-row w-full max-w-container-max mx-auto px-4 md:px-xl py-md md:py-lg gap-gutter">
     <!-- Mobile View Toggle (Map vs List) - Visible only on small screens -->
     <div class="md:hidden flex justify-between items-center mb-4 bg-surface-container-low p-1 rounded-lg w-full">
-        <button class="flex-1 bg-surface shadow-sm rounded-md py-2 font-label-md text-primary flex items-center justify-center gap-2">
+        <button id="btn-grid-mobile" onclick="toggleView('grid')" class="flex-1 bg-surface shadow-sm rounded-md py-2 font-label-md text-primary flex items-center justify-center gap-2 transition-all">
             <span class="material-symbols-outlined text-[18px]">list</span> Danh sách
         </button>
-        <button class="flex-1 text-on-surface-variant rounded-md py-2 font-label-md hover:bg-surface-variant flex items-center justify-center gap-2 transition-colors">
+        <button id="btn-map-mobile" onclick="toggleView('map')" class="flex-1 text-on-surface-variant bg-transparent rounded-md py-2 font-label-md hover:bg-surface-variant flex items-center justify-center gap-2 transition-all">
             <span class="material-symbols-outlined text-[18px]">map</span> Bản đồ
         </button>
     </div>
@@ -140,36 +140,108 @@
             </div>
             <div class="hidden md:flex items-center gap-4">
                 <div class="flex items-center bg-surface-container rounded-lg p-1 border border-outline-variant/20">
-                    <button class="px-4 py-1.5 rounded-md bg-surface shadow-sm font-label-md text-primary flex items-center gap-2 transition-all">
+                    <button id="btn-grid" onclick="toggleView('grid')" class="px-4 py-1.5 rounded-md bg-surface shadow-sm font-label-md text-primary flex items-center gap-2 transition-all">
                         <span class="material-symbols-outlined text-[18px]">grid_view</span> Lưới
                     </button>
-                    <button class="px-4 py-1.5 rounded-md text-on-surface-variant font-label-md hover:text-primary flex items-center gap-2 transition-all">
+                    <button id="btn-map" onclick="toggleView('map')" class="px-4 py-1.5 rounded-md text-on-surface-variant bg-transparent font-label-md hover:text-primary flex items-center gap-2 transition-all">
                         <span class="material-symbols-outlined text-[18px]">map</span> Bản đồ
                     </button>
                 </div>
             </div>
         </div>
         <!-- Listings Grid (Responsive: 1 col mobile, 2 col tablet, complex grid large desktop) -->
-        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 pb-12">
-            @foreach (var room in Model)
-            {
-                <partial name="_RoomCard" model="room" />
-            }
+        <div id="view-grid">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-6 pb-12">
+                @foreach (var room in Model)
+                {
+                    <partial name="_RoomCard" model="room" />
+                }
+            </div>
+            
+            <!-- Pagination -->
+            <div class="flex justify-center mt-auto pb-8">
+                <nav class="flex items-center gap-2">
+                    <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50">
+                        <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-secondary text-on-secondary font-label-md">1</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">2</button>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">3</button>
+                    <span class="text-on-surface-variant px-2">...</span>
+                    <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors">
+                        <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+                    </button>
+                </nav>
+            </div>
         </div>
-        <!-- Pagination -->
-        <div class="flex justify-center mt-auto pb-8">
-            <nav class="flex items-center gap-2">
-                <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors disabled:opacity-50">
-                    <span class="material-symbols-outlined text-[20px]">chevron_left</span>
-                </button>
-                <button class="w-10 h-10 flex items-center justify-center rounded-lg bg-secondary text-on-secondary font-label-md">1</button>
-                <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">2</button>
-                <button class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-surface-variant text-on-surface font-label-md transition-colors">3</button>
-                <span class="text-on-surface-variant px-2">...</span>
-                <button class="w-10 h-10 flex items-center justify-center rounded-lg border border-outline-variant text-on-surface-variant hover:bg-surface-variant transition-colors">
-                    <span class="material-symbols-outlined text-[20px]">chevron_right</span>
-                </button>
-            </nav>
+
+        <!-- Map View (Hidden by default) -->
+        <div id="view-map" class="hidden flex-grow w-full h-[600px] min-h-[500px] bg-surface-container rounded-xl overflow-hidden shadow-sm border border-outline-variant/20 mb-8 relative">
+            <!-- Tạm thời dùng iframe Google Maps nhúng trực tiếp làm mockup -->
+            <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3723.635832049363!2d105.8115682!3d21.047271!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135aafe71772643%3A0xc3972a9de1fd4356!2sT%C3%A2y%20H%E1%BB%93%2C%20Hanoi%2C%20Vietnam!5e0!3m2!1sen!2s!4v1716942000000!5m2!1sen!2s" 
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+            
+            <!-- Floating indicator over map -->
+            <div class="absolute top-4 left-4 bg-white/90 backdrop-blur px-4 py-2 rounded-lg shadow font-label-md text-primary font-medium flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-secondary animate-pulse"></div>
+                Hiển thị @Model.Count() phòng tại Tây Hồ
+            </div>
         </div>
     </section>
 </div>
+
+@section Scripts {
+    <script>
+        function toggleView(view) {
+            const btnGrid = document.getElementById('btn-grid');
+            const btnMap = document.getElementById('btn-map');
+            const viewGrid = document.getElementById('view-grid');
+            const viewMap = document.getElementById('view-map');
+            const btnGridMobile = document.getElementById('btn-grid-mobile');
+            const btnMapMobile = document.getElementById('btn-map-mobile');
+
+            if (view === 'grid') {
+                viewGrid.classList.remove('hidden');
+                viewMap.classList.add('hidden');
+                
+                if (btnGrid && btnMap) {
+                    btnGrid.classList.add('bg-surface', 'shadow-sm', 'text-primary');
+                    btnGrid.classList.remove('text-on-surface-variant', 'bg-transparent');
+                    btnMap.classList.remove('bg-surface', 'shadow-sm', 'text-primary');
+                    btnMap.classList.add('text-on-surface-variant', 'bg-transparent');
+                }
+
+                if (btnGridMobile && btnMapMobile) {
+                    btnGridMobile.classList.add('bg-surface', 'shadow-sm', 'text-primary');
+                    btnGridMobile.classList.remove('text-on-surface-variant', 'bg-transparent');
+                    btnMapMobile.classList.remove('bg-surface', 'shadow-sm', 'text-primary');
+                    btnMapMobile.classList.add('text-on-surface-variant', 'bg-transparent');
+                }
+            } else {
+                viewGrid.classList.add('hidden');
+                viewMap.classList.remove('hidden');
+                
+                if (btnGrid && btnMap) {
+                    btnMap.classList.add('bg-surface', 'shadow-sm', 'text-primary');
+                    btnMap.classList.remove('text-on-surface-variant', 'bg-transparent');
+                    btnGrid.classList.remove('bg-surface', 'shadow-sm', 'text-primary');
+                    btnGrid.classList.add('text-on-surface-variant', 'bg-transparent');
+                }
+
+                if (btnGridMobile && btnMapMobile) {
+                    btnMapMobile.classList.add('bg-surface', 'shadow-sm', 'text-primary');
+                    btnMapMobile.classList.remove('text-on-surface-variant', 'bg-transparent');
+                    btnGridMobile.classList.remove('bg-surface', 'shadow-sm', 'text-primary');
+                    btnGridMobile.classList.add('text-on-surface-variant', 'bg-transparent');
+                }
+            }
+        }
+    </script>
+}

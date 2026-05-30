@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewData["Title"] - Kênh Chủ Trọ</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
     <style>
@@ -13,9 +14,9 @@
         .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     </style>
 </head>
-<body class="flex h-screen bg-white text-gray-800 overflow-hidden">
-
-    <aside class="w-[260px] bg-[#f8f9fb] flex flex-col border-r border-gray-100 flex-shrink-0">
+<body class="bg-white text-gray-800" hx-boost="true">
+    <div class="flex h-screen overflow-hidden w-full">
+        <aside class="w-[260px] bg-[#f8f9fb] flex flex-col border-r border-gray-100 flex-shrink-0">
         
         <div class="p-8 pb-4 flex items-center gap-3">
             <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-sm">
@@ -47,10 +48,12 @@
                 <span class="material-symbols-outlined @(currentAction == "ManageListings" ? "icon-filled" : "")">article</span>
                 Quản lý bài đăng
             </a>
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
-                <span class="material-symbols-outlined">calendar_month</span>
+            <a href="/RentalRequest/MyRequests" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "MyRequests" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "MyRequests" ? "icon-filled" : "")">calendar_month</span>
                 Lịch hẹn xem phòng
             </a>
+
             <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
                 <span class="material-symbols-outlined">payments</span>
                 Tài chính
@@ -78,6 +81,7 @@
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-white p-8 md:p-12">
         @RenderBody()
     </main>
+    </div>
 
     @await RenderSectionAsync("Scripts", required: false)
 

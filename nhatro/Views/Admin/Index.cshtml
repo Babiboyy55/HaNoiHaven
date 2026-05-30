@@ -1,83 +1,101 @@
 @{
     ViewData["Title"] = "Bảng điều khiển";
+    var totalUsersCount = ViewData["TotalUsersCount"] as int? ?? 0;
+    var occupiedRoomsCount = ViewData["OccupiedRoomsCount"] as int? ?? 0;
+    var pendingListingsCount = ViewData["PendingListingsCount"] as int? ?? 0;
+    var rentalRequestsCount = ViewData["RentalRequestsCount"] as int? ?? 0;
 }
 
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
-            <span class="material-symbols-outlined icon-filled text-[28px]">group</span>
+<div class="max-w-6xl mx-auto px-4 py-6">
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800">Bảng điều khiển Quản lý tổng</h2>
+        <p class="text-sm text-gray-500">Giám sát hoạt động và tài khoản của toàn bộ hệ thống HanoiHaven</p>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <!-- Total Users -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center">
+                <span class="material-symbols-outlined icon-filled text-[28px]">group</span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Tổng người dùng</p>
+                <h3 class="text-2xl font-bold text-gray-800">@totalUsersCount.ToString("N0")</h3>
+            </div>
         </div>
-        <div>
-            <p class="text-sm text-gray-500 font-medium">Tổng người dùng</p>
-            <h3 class="text-2xl font-bold text-gray-800">1,248</h3>
+
+        <!-- Occupied Rooms -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
+                <span class="material-symbols-outlined icon-filled text-[28px]">real_estate_agent</span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Phòng đang thuê</p>
+                <h3 class="text-2xl font-bold text-gray-800">@occupiedRoomsCount.ToString("N0")</h3>
+            </div>
+        </div>
+
+        <!-- Pending Listings -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
+                <span class="material-symbols-outlined icon-filled text-[28px]">pending_actions</span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Bài chờ duyệt</p>
+                <h3 class="text-2xl font-bold text-gray-800">@pendingListingsCount</h3>
+            </div>
+        </div>
+
+        <!-- Rental Requests -->
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
+                <span class="material-symbols-outlined icon-filled text-[28px]">calendar_month</span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500 font-medium">Lịch hẹn xem phòng</p>
+                <h3 class="text-2xl font-bold text-gray-800">@rentalRequestsCount</h3>
+            </div>
         </div>
     </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-green-50 text-green-600 flex items-center justify-center">
-            <span class="material-symbols-outlined icon-filled text-[28px]">real_estate_agent</span>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 font-medium">Phòng đang thuê</p>
-            <h3 class="text-2xl font-bold text-gray-800">842</h3>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-orange-50 text-orange-600 flex items-center justify-center">
-            <span class="material-symbols-outlined icon-filled text-[28px]">pending_actions</span>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 font-medium">Bài chờ duyệt</p>
-            <h3 class="text-2xl font-bold text-gray-800">15</h3>
-        </div>
-    </div>
-
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6 flex items-center gap-4">
-        <div class="w-12 h-12 rounded-full bg-purple-50 text-purple-600 flex items-center justify-center">
-            <span class="material-symbols-outlined icon-filled text-[28px]">report</span>
-        </div>
-        <div>
-            <p class="text-sm text-gray-500 font-medium">Báo cáo vi phạm</p>
-            <h3 class="text-2xl font-bold text-gray-800">3</h3>
-        </div>
-    </div>
-</div>
-
-<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold text-gray-800">Quản lý hệ thống</h3>
-        </div>
-        <div class="space-y-3">
-            <a href="#" class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-secondary hover:shadow-md transition-all group">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-gray-400 group-hover:text-secondary">manage_accounts</span>
-                    <div>
-                        <p class="font-semibold text-gray-800">Danh sách người dùng</p>
-                        <p class="text-sm text-gray-500">Xem và phân quyền tài khoản</p>
+    <!-- Management Controls -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-gray-800">Quản lý hệ thống</h3>
+            </div>
+            <div class="space-y-3">
+                <a href="/Admin/ManageUsers" class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-[#136A64] hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-gray-400 group-hover:text-secondary">manage_accounts</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">Danh sách người dùng</p>
+                            <p class="text-sm text-gray-500">Xem và phân quyền tài khoản</p>
+                        </div>
                     </div>
-                </div>
-                <span class="material-symbols-outlined text-gray-300 group-hover:text-secondary">chevron_right</span>
-            </a>
-            <a href="#" class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-secondary hover:shadow-md transition-all group">
-                <div class="flex items-center gap-3">
-                    <span class="material-symbols-outlined text-gray-400 group-hover:text-secondary">fact_check</span>
-                    <div>
-                        <p class="font-semibold text-gray-800">Kiểm duyệt bài đăng</p>
-                        <p class="text-sm text-gray-500">Phê duyệt hoặc từ chối phòng mới</p>
+                    <span class="material-symbols-outlined text-gray-300 group-hover:text-secondary">chevron_right</span>
+                </a>
+                <a href="/Admin/ManageListings" class="flex items-center justify-between p-4 rounded-lg border border-gray-100 hover:border-[#136A64] hover:shadow-md transition-all group">
+                    <div class="flex items-center gap-3">
+                        <span class="material-symbols-outlined text-gray-400 group-hover:text-secondary">fact_check</span>
+                        <div>
+                            <p class="font-semibold text-gray-800">Kiểm duyệt bài đăng</p>
+                            <p class="text-sm text-gray-500">Phê duyệt hoặc từ chối phòng mới</p>
+                        </div>
                     </div>
-                </div>
-                <span class="material-symbols-outlined text-gray-300 group-hover:text-secondary">chevron_right</span>
-            </a>
+                    <span class="material-symbols-outlined text-gray-300 group-hover:text-secondary">chevron_right</span>
+                </a>
+            </div>
         </div>
-    </div>
 
-    <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h3 class="text-lg font-bold text-gray-800 mb-4">Hoạt động gần đây</h3>
-        <div class="flex flex-col items-center justify-center h-48 text-gray-400">
-            <span class="material-symbols-outlined text-[48px] mb-2">history</span>
-            <p>Hệ thống vừa mới được khởi tạo</p>
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+            <h3 class="text-lg font-bold text-gray-800 mb-4">Hoạt động gần đây</h3>
+            <div class="flex flex-col items-center justify-center h-48 text-gray-400">
+                <span class="material-symbols-outlined text-[48px] mb-2 text-secondary">history</span>
+                <p class="text-sm font-medium">Hệ thống đang hoạt động ổn định trên CSDL SQL Server</p>
+                <p class="text-xs text-gray-500 mt-1">Dữ liệu thống kê đã được đồng bộ hóa thành công</p>
+            </div>
         </div>
     </div>
 </div>
