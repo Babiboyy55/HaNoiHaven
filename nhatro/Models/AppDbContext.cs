@@ -15,5 +15,9 @@ namespace nhatro.Models
         public DbSet<RoomImage> RoomImages { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<RentalRequest> RentalRequests { get; set; }
+        public DbSet<Contract> Contracts { get; set; }
+        public DbSet<Invoice> Invoices { get; set; }
+        public DbSet<ChatMessage> ChatMessages { get; set; }
+        public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
     }
 }

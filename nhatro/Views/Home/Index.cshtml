@@ -1,93 +1,271 @@
 @model IEnumerable<nhatro.Models.RoomListing>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Tìm Phòng Trọ Hà Nội | HanoiHaven";
 }
 
-<!-- Hero Section -->
-<section class="relative pt-lg pb-xl md:pt-xl md:pb-[120px] px-4 md:px-xl hero-pattern border-b border-surface-variant overflow-hidden">
-    <div class="max-w-container-max mx-auto relative z-10 flex flex-col items-center text-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-fixed text-primary text-label-sm font-label-sm mb-6 border border-inverse-primary shadow-sm"><span class="material-symbols-outlined text-[16px] icon-filled">verified</span> Danh sách đã xác thực tại Hà Nội</div>
-        <h1 class="font-display-lg text-display-lg md:text-[56px] md:leading-[64px] text-primary mb-6 max-w-3xl">Tìm Kiếm Không Gian <br class="hidden md:block"> Sống Lý Tưởng Tại <span class="text-gradient">Hà Nội</span></h1>
-        <p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mb-12">Khám phá các phòng và căn hộ cao cấp tại Cầu Giấy, Đống Đa và Hai Bà Trưng. Chủ nhà uy tín, giá cả minh bạch và không chi phí ẩn.</p>
-        <!-- Search Bar -->
-        <form action="/Home/Explore" method="get" class="w-full max-w-4xl glass-card rounded-xl p-4 md:p-6 shadow-[0_15px_30px_-5px_rgba(0,0,0,0.08)] border border-outline-variant/30 flex flex-col md:flex-row gap-4">
-            <div class="flex-1 relative">
-                <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1 ml-1">Quận/Huyện</label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">location_on</span>
-                    <select name="query" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 appearance-none outline-none transition-all cursor-pointer">
-                        <option value="">Chọn Quận/Huyện</option>
-                        <option value="Cầu Giấy">Cầu Giấy</option>
-                        <option value="Đống Đa">Đống Đa</option>
-                        <option value="Hai Bà Trưng">Hai Bà Trưng</option>
-                        <option value="Thanh Xuân">Thanh Xuân</option>
-                        <option value="Hoàn Kiếm">Hoàn Kiếm</option>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+<!-- ==============================
+     HERO SECTION
+=============================== -->
+<section class="hero-pattern relative overflow-hidden" style="padding-top: 96px; padding-bottom: 80px;">
+
+    <!-- Glow Blobs -->
+    <div class="glow-blob" style="width:520px;height:520px;background:radial-gradient(circle,rgba(173,199,247,0.35),transparent 70%);top:-120px;left:-160px;"></div>
+    <div class="glow-blob" style="width:480px;height:480px;background:radial-gradient(circle,rgba(137,211,212,0.25),transparent 70%);bottom:-80px;right:-140px;"></div>
+    <div class="glow-blob" style="width:280px;height:280px;background:radial-gradient(circle,rgba(255,221,186,0.3),transparent 70%);top:60px;right:25%;"></div>
+
+    <div class="max-w-container-max mx-auto px-4 md:px-8 relative z-10 flex flex-col items-center text-center">
+
+        <!-- Verified Badge -->
+        <div class="animate-fade-up animate-fade-up-delay-1 inline-flex items-center gap-2 px-5 py-2 rounded-full bg-white/80 backdrop-blur-sm text-secondary text-label-sm font-label-sm mb-8 border border-secondary/20 shadow-sm">
+            <span class="material-symbols-outlined text-[16px] icon-filled text-secondary">verified</span>
+            Hơn 500+ phòng đã xác thực tại Hà Nội
+        </div>
+
+        <!-- Headline -->
+        <h1 class="animate-fade-up animate-fade-up-delay-2 font-black text-primary max-w-4xl mb-6"
+            style="font-size: clamp(2.2rem, 5vw, 3.6rem); line-height: 1.15; letter-spacing: -0.03em;">
+            Tìm Kiếm Không Gian Sống<br>
+            <span class="text-gradient">Lý Tưởng Tại Hà Nội</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="animate-fade-up animate-fade-up-delay-3 text-on-surface-variant max-w-2xl mb-10 text-lg leading-relaxed">
+            Khám phá phòng và căn hộ cao cấp tại Cầu Giấy, Đống Đa và Hai Bà Trưng.<br class="hidden md:block">
+            Chủ nhà uy tín &mdash; Giá minh bạch &mdash; Không chi phí ẩn.
+        </p>
+
+        <!-- ===== SEARCH CARD ===== -->
+        <div class="animate-fade-up animate-fade-up-delay-4 w-full max-w-5xl">
+            <form action="/Home/Explore" method="get"
+                  class="glass-card rounded-2xl p-2 md:p-2 flex flex-col md:flex-row gap-0 md:gap-0 overflow-hidden">
+
+                <!-- Quận / Huyện -->
+                <div class="flex-1 flex flex-col px-5 py-4 hover:bg-black/[0.02] rounded-xl transition-colors cursor-pointer">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-1.5">Quận / Huyện</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-secondary text-[18px]">location_on</span>
+                        <select name="query"
+                                class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-medium pl-7 pr-4 py-0 text-[15px] appearance-none outline-none cursor-pointer">
+                            <option value="">Chọn Quận / Huyện</option>
+                            <option value="Cầu Giấy">Cầu Giấy</option>
+                            <option value="Đống Đa">Đống Đa</option>
+                            <option value="Hai Bà Trưng">Hai Bà Trưng</option>
+                            <option value="Thanh Xuân">Thanh Xuân</option>
+                            <option value="Hoàn Kiếm">Hoàn Kiếm</option>
+                            <option value="Hà Đông">Hà Đông</option>
+                            <option value="Nam Từ Liêm">Nam Từ Liêm</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="flex-1 relative">
-                <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1 ml-1">Loại phòng</label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">bed</span>
-                    <select name="roomTypes" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 appearance-none outline-none transition-all cursor-pointer">
-                        <option value="">Mọi loại phòng</option>
-                        <option value="Studio">Studio</option>
-                        <option value="Phòng chung">Phòng ghép</option>
-                        <option value="Nguyên căn">Nguyên căn</option>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+
+                <!-- Divider -->
+                <div class="search-divider hidden md:block mx-1"></div>
+
+                <!-- Loại phòng -->
+                <div class="flex-1 flex flex-col px-5 py-4 hover:bg-black/[0.02] rounded-xl transition-colors cursor-pointer">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-1.5">Loại phòng</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-secondary text-[18px]">bed</span>
+                        <select name="roomTypes"
+                                class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-medium pl-7 pr-4 py-0 text-[15px] appearance-none outline-none cursor-pointer">
+                            <option value="">Mọi loại phòng</option>
+                            <option value="Studio">Studio</option>
+                            <option value="Phòng chung">Phòng ghép</option>
+                            <option value="Nguyên căn">Nguyên căn</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="flex-1 relative">
-                <label class="block text-label-sm font-label-sm text-on-surface-variant mb-1 ml-1">Khoảng giá</label>
-                <div class="relative">
-                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">payments</span>
-                    <select name="priceRange" class="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-10 pr-4 text-body-md font-body-md text-on-surface focus:border-secondary focus:ring-2 focus:ring-secondary/20 appearance-none outline-none transition-all cursor-pointer">
-                        <option value="">Mọi mức giá</option>
-                        <option value="under-3m">Dưới 3 triệu VNĐ</option>
-                        <option value="3m-5m">3 triệu - 5 triệu VNĐ</option>
-                        <option value="5m-10m">5 triệu - 10 triệu VNĐ</option>
-                        <option value="over-10m">Trên 10 triệu VNĐ</option>
-                    </select>
-                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+
+                <!-- Divider -->
+                <div class="search-divider hidden md:block mx-1"></div>
+
+                <!-- Khoảng giá -->
+                <div class="flex-1 flex flex-col px-5 py-4 hover:bg-black/[0.02] rounded-xl transition-colors cursor-pointer">
+                    <label class="block text-xs font-bold text-primary uppercase tracking-widest mb-1.5">Khoảng giá</label>
+                    <div class="relative">
+                        <span class="material-symbols-outlined absolute left-0 top-1/2 -translate-y-1/2 text-secondary text-[18px]">payments</span>
+                        <select name="priceRange"
+                                class="w-full bg-transparent border-none focus:ring-0 text-on-surface font-medium pl-7 pr-4 py-0 text-[15px] appearance-none outline-none cursor-pointer">
+                            <option value="">Mọi mức giá</option>
+                            <option value="under-3m">Dưới 3 triệu VNĐ</option>
+                            <option value="3m-5m">3 – 5 triệu VNĐ</option>
+                            <option value="5m-10m">5 – 10 triệu VNĐ</option>
+                            <option value="over-10m">Trên 10 triệu VNĐ</option>
+                        </select>
+                    </div>
                 </div>
+
+                <!-- Search Button -->
+                <div class="flex items-stretch md:ml-2 p-2">
+                    <button type="submit"
+                            class="w-full md:w-auto bg-secondary text-on-secondary px-7 py-4 rounded-xl font-bold hover:bg-secondary/90 active:scale-95 transition-all shadow-md flex items-center justify-center gap-2 text-[15px] whitespace-nowrap">
+                        <span class="material-symbols-outlined text-[20px]">search</span>
+                        Tìm kiếm
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Trust Stats -->
+        <div class="mt-10 flex flex-wrap items-center justify-center gap-3 md:gap-5">
+            <div class="stat-badge rounded-full px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px] icon-filled">home_work</span>
+                <span class="text-sm font-semibold text-primary">500+ phòng đăng ký</span>
             </div>
-            <div class="flex items-end mt-2 md:mt-0">
-                <button type="submit" class="w-full md:w-auto bg-secondary text-on-secondary px-8 py-3 rounded-lg font-label-md text-label-md hover:bg-on-secondary-container transition-colors shadow-sm flex items-center justify-center gap-2 h-[48px]"><span class="material-symbols-outlined">search</span> Tìm kiếm</button>
+            <div class="stat-badge rounded-full px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px] icon-filled">groups</span>
+                <span class="text-sm font-semibold text-primary">1,200+ khách thuê</span>
             </div>
-        </form>
+            <div class="stat-badge rounded-full px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px] icon-filled">star</span>
+                <span class="text-sm font-semibold text-primary">Đánh giá 4.8/5</span>
+            </div>
+            <div class="stat-badge rounded-full px-4 py-2 flex items-center gap-2">
+                <span class="material-symbols-outlined text-secondary text-[18px] icon-filled">security</span>
+                <span class="text-sm font-semibold text-primary">Hợp đồng bảo đảm</span>
+            </div>
+        </div>
     </div>
-    <!-- Abstract decorative elements -->
-    <div class="absolute top-20 -left-20 w-64 h-64 bg-secondary-container rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
-    <div class="absolute bottom-10 -right-20 w-80 h-80 bg-primary-fixed rounded-full mix-blend-multiply filter blur-3xl opacity-40"></div>
 </section>
 
-<!-- Featured Rooms Bento Grid -->
-<section class="py-xl px-4 md:px-xl max-w-container-max mx-auto bg-surface-container-lowest">
-    <div class="flex justify-between items-end mb-10">
-        <div>
-            <h2 class="font-headline-lg text-headline-lg text-primary mb-2">Phòng Nổi Bật</h2>
-            <p class="font-body-md text-body-md text-on-surface-variant">Những lựa chọn phòng nghỉ cao cấp được tuyển chọn tại Hà Nội.</p>
+<!-- ==============================
+     HOW IT WORKS (3 bước)
+=============================== -->
+<section class="py-16 bg-white border-y border-outline-variant/15">
+    <div class="max-w-container-max mx-auto px-4 md:px-8">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div class="flex flex-col items-center gap-4 p-6 rounded-2xl hover:bg-surface-container-low transition-colors">
+                <div class="w-14 h-14 bg-primary-fixed rounded-2xl flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-primary text-[28px]">search</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Bước 1</p>
+                    <h3 class="font-bold text-primary text-lg mb-2">Tìm kiếm & Lọc</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">Tìm theo quận, giá thuê, loại phòng và tiện ích phù hợp với bạn.</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center gap-4 p-6 rounded-2xl hover:bg-surface-container-low transition-colors">
+                <div class="w-14 h-14 bg-secondary-container rounded-2xl flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-on-secondary-container text-[28px]">calendar_month</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Bước 2</p>
+                    <h3 class="font-bold text-primary text-lg mb-2">Đặt lịch xem phòng</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">Gửi yêu cầu đặt lịch, chủ nhà sẽ xác nhận trong vòng 24 giờ.</p>
+                </div>
+            </div>
+            <div class="flex flex-col items-center gap-4 p-6 rounded-2xl hover:bg-surface-container-low transition-colors">
+                <div class="w-14 h-14 bg-tertiary-container rounded-2xl flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined text-on-tertiary-container text-[28px]">description</span>
+                </div>
+                <div>
+                    <p class="text-xs font-bold text-secondary uppercase tracking-widest mb-1">Bước 3</p>
+                    <h3 class="font-bold text-primary text-lg mb-2">Ký hợp đồng online</h3>
+                    <p class="text-on-surface-variant text-sm leading-relaxed">Hợp đồng điện tử minh bạch, hóa đơn hàng tháng rõ ràng, thanh toán online.</p>
+                </div>
+            </div>
         </div>
-        <a href="/Home/Explore" class="hidden md:flex items-center gap-1 text-secondary font-label-md text-label-md hover:underline decoration-secondary">Xem tất cả phòng <span class="material-symbols-outlined text-[20px]">arrow_forward</span></a>
     </div>
-
-    @if (Model == null || !Model.Any())
-    {
-        <div class="bg-surface-container rounded-2xl border border-outline-variant/30 p-12 text-center">
-            <div class="text-6xl mb-4">🏡</div>
-            <h3 class="text-xl font-semibold text-primary mb-2">Chưa có bài đăng nào</h3>
-            <p class="text-on-surface-variant">Hệ thống hiện tại chưa có tin đăng phòng trọ nào.</p>
-        </div>
-    }
-    else
-    {
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            @foreach (var room in Model)
-            {
-                <partial name="_RoomCard" model="room" />
-            }
-        </div>
-    }
 </section>
+
+<!-- ==============================
+     FEATURED ROOMS
+=============================== -->
+<section class="py-16 md:py-20 bg-surface-container-lowest">
+    <div class="max-w-container-max mx-auto px-4 md:px-8">
+
+        <!-- Section Header -->
+        <div class="flex flex-col md:flex-row md:justify-between md:items-end mb-10 gap-4">
+            <div>
+                <p class="text-xs font-bold text-secondary uppercase tracking-widest mb-2">Được tuyển chọn kỹ càng</p>
+                <h2 class="font-black text-primary mb-2" style="font-size: clamp(1.6rem, 3vw, 2rem); letter-spacing: -0.02em;">
+                    Phòng Nổi Bật
+                </h2>
+                <p class="text-on-surface-variant">Những lựa chọn phòng nghỉ cao cấp tại Hà Nội đang được nhiều người quan tâm.</p>
+            </div>
+            <a href="/Home/Explore"
+               class="hidden md:inline-flex items-center gap-2 text-secondary font-semibold text-sm border border-secondary/30 px-5 py-2.5 rounded-xl hover:bg-secondary hover:text-on-secondary transition-all shadow-sm">
+                Xem tất cả phòng
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </a>
+        </div>
+
+        @if (Model == null || !Model.Any())
+        {
+            <div class="bg-white rounded-3xl border border-outline-variant/20 p-16 text-center shadow-sm">
+                <div class="w-20 h-20 bg-surface-container rounded-2xl flex items-center justify-center mx-auto mb-5">
+                    <span class="material-symbols-outlined text-[40px] text-outline">home_work</span>
+                </div>
+                <h3 class="text-xl font-bold text-primary mb-2">Chưa có bài đăng nào</h3>
+                <p class="text-on-surface-variant mb-6">Hệ thống hiện chưa có tin đăng phòng trọ nào được duyệt.</p>
+                @if (User.IsInRole("Owner"))
+                {
+                    <a href="/Owner/Create"
+                       class="inline-flex items-center gap-2 bg-secondary text-on-secondary px-6 py-3 rounded-xl font-semibold hover:bg-secondary/90 transition-colors shadow-sm">
+                        <span class="material-symbols-outlined text-[20px]">add_circle</span>
+                        Đăng tin ngay
+                    </a>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                @foreach (var room in Model)
+                {
+                    <partial name="_RoomCard" model="room" />
+                }
+            </div>
+        }
+
+        <!-- View All Mobile -->
+        <div class="mt-8 text-center md:hidden">
+            <a href="/Home/Explore"
+               class="inline-flex items-center gap-2 text-secondary font-semibold text-sm border border-secondary/30 px-6 py-3 rounded-xl hover:bg-secondary hover:text-on-secondary transition-all">
+                Xem tất cả phòng
+                <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     CTA BANNER — Dành cho Chủ trọ
+=============================== -->
+@if (!User.Identity!.IsAuthenticated || User.IsInRole("Owner"))
+{
+    <section class="py-16 md:py-20" style="background: linear-gradient(135deg, #002045 0%, #1a365d 50%, #13696a 100%);">
+        <div class="max-w-container-max mx-auto px-4 md:px-8 text-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 text-white/80 text-xs font-bold uppercase tracking-widest mb-6">
+                <span class="material-symbols-outlined text-[14px]">real_estate_agent</span>
+                Dành cho Chủ trọ
+            </div>
+            <h2 class="font-black text-white mb-4" style="font-size: clamp(1.6rem, 3vw, 2.4rem); letter-spacing: -0.02em;">
+                Đăng tin cho thuê dễ dàng<br>
+                <span style="color: #89d3d4;">Quản lý thông minh ngay hôm nay</span>
+            </h2>
+            <p class="text-white/70 max-w-xl mx-auto mb-8 text-base leading-relaxed">
+                Đăng bài, quản lý hợp đồng, thu tiền và theo dõi điện nước — tất cả trong một nền tảng. Miễn phí hoàn toàn cho 3 tháng đầu.
+            </p>
+            <div class="flex flex-wrap gap-4 justify-center">
+                @if (User.IsInRole("Owner"))
+                {
+                    <a href="/Owner" class="inline-flex items-center gap-2 bg-white text-primary px-8 py-3.5 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-lg">
+                        <span class="material-symbols-outlined text-[20px]">dashboard</span>
+                        Vào Kênh Chủ Trọ
+                    </a>
+                }
+                else
+                {
+                    <a href="/Account/Register" class="inline-flex items-center gap-2 bg-white text-primary px-8 py-3.5 rounded-xl font-bold hover:bg-gray-50 transition-colors shadow-lg">
+                        <span class="material-symbols-outlined text-[20px]">person_add</span>
+                        Đăng ký miễn phí
+                    </a>
+                    <a href="/Home/Explore" class="inline-flex items-center gap-2 border border-white/30 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/10 transition-colors">
+                        Tìm hiểu thêm
+                    </a>
+                }
+            </div>
+        </div>
+    </section>
+}

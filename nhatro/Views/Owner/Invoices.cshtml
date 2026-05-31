@@ -1,0 +1,179 @@
+@model IEnumerable<nhatro.Models.Invoice>
+@{
+    Layout = "_OwnerLayout";
+    ViewData["Title"] = "Quản lý Tài chính & Hóa đơn";
+}
+
+<div class="flex flex-col gap-8">
+    <div>
+        <h1 class="text-2xl font-black text-gray-800 tracking-tight">Tài chính & Hóa đơn hàng tháng</h1>
+        <p class="text-sm text-gray-500 mt-1">Ghi nhận chỉ số điện nước dịch vụ, lập và quản lý tình trạng thanh toán hóa đơn tiền phòng</p>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="bg-teal-50 border border-teal-200 text-teal-800 px-4 py-3 rounded-xl flex items-center gap-3">
+            <span class="material-symbols-outlined text-teal-600">check_circle</span>
+            <span class="font-semibold text-sm">@TempData["SuccessMessage"]</span>
+        </div>
+    }
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Bên trái (2 cols): Bộ lọc & Danh sách hóa đơn -->
+        <div class="lg:col-span-2 flex flex-col gap-6">
+            <!-- Bộ lọc -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] p-6">
+                <form method="get" action="/Owner/Invoices" class="flex flex-wrap items-center gap-4">
+                    <div class="flex-1 min-w-[120px] flex flex-col gap-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase">Tháng</label>
+                        <select name="month" class="w-full px-3 py-2 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none text-sm transition-all">
+                            <option value="">Tất cả</option>
+                            @for (int m = 1; m <= 12; m++)
+                            {
+                                <option value="@m" selected="@(ViewBag.SelectedMonth == m)">Tháng @m</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="flex-1 min-w-[120px] flex flex-col gap-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase">Năm</label>
+                        <select name="year" class="w-full px-3 py-2 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none text-sm transition-all">
+                            <option value="">Tất cả</option>
+                            @for (int y = DateTime.Today.Year - 2; y <= DateTime.Today.Year + 1; y++)
+                            {
+                                <option value="@y" selected="@(ViewBag.SelectedYear == y)">@y</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="flex-1 min-w-[150px] flex flex-col gap-1.5">
+                        <label class="text-xs font-bold text-gray-500 uppercase">Trạng thái</label>
+                        <select name="status" class="w-full px-3 py-2 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none text-sm transition-all">
+                            <option value="">Tất cả</option>
+                            <option value="Chưa thanh toán" selected='@(ViewBag.SelectedStatus == "Chưa thanh toán")'>Chưa thanh toán</option>
+                            <option value="Đã thanh toán" selected='@(ViewBag.SelectedStatus == "Đã thanh toán")'>Đã thanh toán</option>
+                        </select>
+                    </div>
+
+                    <div class="flex items-end self-end">
+                        <button type="submit" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-2 rounded-xl text-sm font-bold shadow-sm transition-all h-[42px]">
+                            Lọc hóa đơn
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Danh sách hóa đơn -->
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+                @if (!Model.Any())
+                {
+                    <div class="p-12 text-center">
+                        <span class="material-symbols-outlined text-gray-300 text-5xl">payments</span>
+                        <p class="text-gray-500 mt-3 font-semibold">Chưa có hóa đơn nào cho tháng/bộ lọc này.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="overflow-x-auto">
+                        <table class="w-full border-collapse text-left text-sm">
+                            <thead>
+                                <tr class="bg-gray-50/50 border-b border-gray-100 text-gray-500 font-bold">
+                                    <th class="p-5">Phòng</th>
+                                    <th class="p-5">Kỳ thanh toán</th>
+                                    <th class="p-5 text-right">Tổng tiền</th>
+                                    <th class="p-5 text-center">Tình trạng</th>
+                                    <th class="p-5 text-center">Thao tác</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100">
+                                @foreach (var item in Model)
+                                {
+                                    <tr class="hover:bg-gray-50/50 transition-colors">
+                                        <td class="p-5">
+                                            <div class="font-bold text-gray-800">@(item.Room?.RoomName ?? "Phòng đã xóa")</div>
+                                            <div class="text-xs text-gray-500">Khách: @item.TenantName</div>
+                                        </td>
+                                        <td class="p-5 text-gray-600 font-medium">
+                                            Tháng @item.BillingMonth / @item.BillingYear
+                                        </td>
+                                        <td class="p-5 text-right font-bold text-gray-800">
+                                            @string.Format("{0:N0}", item.TotalAmount) đ
+                                        </td>
+                                        <td class="p-5 text-center">
+                                            @if (item.Status == "Đã thanh toán")
+                                            {
+                                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-100" title="Ngày đóng: @(item.PaymentDate?.ToString("dd/MM/yyyy") ?? "-")">
+                                                    Đã thanh toán
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="bg-red-50 text-red-700 text-xs font-bold px-3 py-1.5 rounded-full border border-red-100 animate-pulse">
+                                                    Chưa thanh toán
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="p-5 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <a href="/Owner/InvoiceDetail/@item.Id" class="px-3 py-1.5 bg-gray-50 text-gray-700 hover:bg-gray-100 border border-gray-200 rounded-lg text-xs font-bold transition-all flex items-center gap-1" title="Xem & In">
+                                                    <span class="material-symbols-outlined text-[14px]">receipt</span> Chi tiết
+                                                </a>
+                                                @if (item.Status == "Chưa thanh toán")
+                                                {
+                                                    <form action="/Owner/MarkAsPaid/@item.Id" method="post" class="inline">
+                                                        <button type="submit" class="px-3 py-1.5 bg-[#136A64] hover:bg-[#0f544f] text-white rounded-lg text-xs font-bold transition-all flex items-center gap-1" onclick="return confirm('Xác nhận đã nhận đủ tiền phòng và đóng hóa đơn này?');">
+                                                            <span class="material-symbols-outlined text-[14px]">done</span> Thu tiền
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Bên phải (1 col): Phòng cần ghi điện nước -->
+        <div class="flex flex-col gap-6">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] p-6">
+                <h3 class="font-bold text-gray-800 text-base flex items-center gap-2 mb-4">
+                    <span class="material-symbols-outlined text-[#136A64]">ac_unit</span>
+                    Ghi chỉ số nhanh
+                </h3>
+                <p class="text-xs text-gray-500 mb-4">Chọn phòng đang thuê để nhập số điện nước mới và tự động xuất hóa đơn.</p>
+                
+                @if (ViewBag.ActiveRooms == null || !((IEnumerable<nhatro.Models.Room>)ViewBag.ActiveRooms).Any())
+                {
+                    <div class="p-6 text-center border-2 border-dashed border-gray-100 rounded-xl">
+                        <span class="material-symbols-outlined text-gray-300 text-3xl">home</span>
+                        <p class="text-xs text-gray-400 mt-2">Không có phòng nào đang trong trạng thái "Đang thuê". Vui lòng tạo Hợp đồng thuê trước để cập nhật trạng thái phòng.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="space-y-3">
+                        @foreach (var room in (IEnumerable<nhatro.Models.Room>)ViewBag.ActiveRooms)
+                        {
+                            <div class="flex items-center justify-between p-3.5 bg-gray-50/50 hover:bg-gray-50 border border-gray-100 rounded-xl transition-all">
+                                <div class="overflow-hidden">
+                                    <div class="font-bold text-gray-800 text-sm">@room.RoomName</div>
+                                    <div class="text-xs text-gray-500 truncate">Khách: @room.TenantName</div>
+                                </div>
+                                <a href="/Owner/RecordUtilities?roomId=@room.Id" class="bg-white hover:bg-gray-100 text-gray-700 border border-gray-200 px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1 shrink-0">
+                                    <span class="material-symbols-outlined text-[14px]">edit_note</span> Ghi số
+                                </a>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

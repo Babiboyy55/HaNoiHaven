@@ -33,6 +33,10 @@
         }
 
         <nav class="flex-1 px-4 mt-6 space-y-2 overflow-y-auto">
+            <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold text-gray-500 hover:bg-gray-100 transition-colors">
+                <span class="material-symbols-outlined">arrow_back</span>
+                Về Trang chủ
+            </a>
             <a href="/Owner" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
                @(currentAction == "Index" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
                 <span class="material-symbols-outlined @(currentAction == "Index" ? "icon-filled" : "")">dashboard</span>
@@ -53,10 +57,25 @@
                 <span class="material-symbols-outlined @(currentAction == "MyRequests" ? "icon-filled" : "")">calendar_month</span>
                 Lịch hẹn xem phòng
             </a>
-
-            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-100 rounded-xl font-medium transition-colors">
-                <span class="material-symbols-outlined">payments</span>
-                Tài chính
+            <a href="/Owner/Contracts" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "Contracts" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "Contracts" ? "icon-filled" : "")">description</span>
+                Hợp đồng thuê
+            </a>
+            <a href="/Owner/Invoices" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "Invoices" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "Invoices" ? "icon-filled" : "")">payments</span>
+                Tài chính & Hóa đơn
+            </a>
+            <a href="/Owner/Messages" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "Messages" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "Messages" ? "icon-filled" : "")">chat</span>
+                Tin nhắn khách thuê
+            </a>
+            <a href="/Owner/MaintenanceRequests" class="flex items-center gap-3 px-4 py-3 rounded-xl font-semibold transition-colors 
+               @(currentAction == "MaintenanceRequests" ? "bg-[#a2eded]/50 text-[#13696a]" : "text-gray-500 hover:bg-gray-100")">
+                <span class="material-symbols-outlined @(currentAction == "MaintenanceRequests" ? "icon-filled" : "")">build</span>
+                Yêu cầu sửa chữa
             </a>
         </nav>
 

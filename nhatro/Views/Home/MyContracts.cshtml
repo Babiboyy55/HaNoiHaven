@@ -1,0 +1,217 @@
+@model IEnumerable<nhatro.Models.Contract>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Hợp đồng & Hóa đơn của tôi";
+}
+
+<div class="w-full max-w-container-max mx-auto px-4 md:px-8 py-6 md:py-10 flex-grow flex flex-col gap-8">
+    
+    <div>
+        <h1 class="font-headline-lg text-primary text-2xl md:text-3xl font-bold tracking-tight">Hợp đồng & Hóa đơn của tôi</h1>
+        <p class="text-sm text-on-surface-variant mt-1">Theo dõi thời hạn hợp đồng thuê phòng, thanh toán hóa đơn hàng tháng và gửi yêu cầu sửa chữa thiết bị.</p>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="bg-teal-50 border border-teal-200 text-teal-850 p-4 rounded-xl flex items-center gap-3">
+            <span class="material-symbols-outlined text-teal-600">check_circle</span>
+            <span class="text-sm font-semibold">@TempData["SuccessMessage"]</span>
+        </div>
+    }
+    
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-xl flex items-center gap-3">
+            <span class="material-symbols-outlined text-red-600">error</span>
+            <span class="text-sm font-semibold">@TempData["ErrorMessage"]</span>
+        </div>
+    }
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Bên trái (2 cols): Hợp đồng & Hóa đơn -->
+        <div class="lg:col-span-2 flex flex-col gap-8">
+            
+            <!-- Phần 1: Thông tin Hợp đồng đang hoạt động -->
+            <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm p-6 md:p-8 flex flex-col gap-6">
+                <h3 class="font-semibold text-primary text-lg flex items-center gap-2 border-b border-outline-variant/20 pb-3">
+                    <span class="material-symbols-outlined text-secondary">description</span>
+                    Thông tin Hợp đồng hiện tại
+                </h3>
+
+                @if (!Model.Any(c => c.Status == "Đang hoạt động"))
+                {
+                    <div class="p-8 text-center bg-background rounded-xl border border-dashed border-outline-variant/50">
+                        <span class="material-symbols-outlined text-outline/40 text-4xl">home_work</span>
+                        <p class="text-on-surface-variant text-sm mt-2 font-medium">Bạn hiện không có hợp đồng thuê phòng nào đang hoạt động trên hệ thống.</p>
+                        <p class="text-xs text-outline mt-1">Vui lòng liên hệ với chủ nhà để lập hợp đồng thuê phòng trực tuyến.</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var c in Model.Where(c => c.Status == "Đang hoạt động"))
+                    {
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                            <div>
+                                <div class="text-xs text-outline font-bold uppercase">Phòng thuê</div>
+                                <div class="text-base font-bold text-primary mt-1">Phòng @(c.Room?.RoomName ?? "") - @(c.Room?.PropertyType ?? "Căn hộ")</div>
+                                <div class="text-xs text-on-surface-variant mt-0.5">Thời hạn: @c.StartDate.ToString("dd/MM/yyyy") - @c.EndDate.ToString("dd/MM/yyyy")</div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-xs text-outline font-bold uppercase">Giá thuê & Tiền cọc</div>
+                                <div class="text-base font-bold text-secondary mt-1">@string.Format("{0:N0}", c.RentPrice) đ/tháng</div>
+                                <div class="text-xs text-[#136A64] font-semibold mt-0.5">Tiền đặt cọc: @string.Format("{0:N0}", c.DepositAmount) đ</div>
+                            </div>
+                        </div>
+
+                        <!-- Gửi yêu cầu báo hỏng (sửa chữa) -->
+                        <div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-5 mt-2 flex flex-col gap-3">
+                            <h4 class="font-bold text-primary text-sm flex items-center gap-1.5">
+                                <span class="material-symbols-outlined text-secondary text-[20px]">build</span>
+                                Báo hỏng thiết bị & Gửi yêu cầu sửa chữa
+                            </h4>
+                            <form asp-action="CreateMaintenanceRequest" method="post" class="flex gap-2.5">
+                                <input type="hidden" name="roomId" value="@c.RoomId" />
+                                <input type="text" name="description" placeholder="Ví dụ: Hỏng điều hòa phòng 202, rò rỉ nước nhà tắm..." required class="flex-1 bg-white border border-outline-variant rounded-lg px-4 py-2.5 text-sm focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all" />
+                                <button type="submit" class="bg-secondary text-on-secondary px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-secondary/90 transition-colors shadow-sm shrink-0">
+                                    Gửi báo hỏng
+                                </button>
+                            </form>
+                        </div>
+                    }
+                }
+            </div>
+
+            <!-- Phần 2: Danh sách Hóa đơn hàng tháng -->
+            <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm p-6 md:p-8 flex flex-col gap-6">
+                <h3 class="font-semibold text-primary text-lg flex items-center gap-2 border-b border-outline-variant/20 pb-3">
+                    <span class="material-symbols-outlined text-secondary">payments</span>
+                    Hóa đơn tiền phòng & Dịch vụ
+                </h3>
+
+                @{
+                    var invoices = (IEnumerable<nhatro.Models.Invoice>)ViewBag.Invoices;
+                }
+                @if (invoices == null || !invoices.Any())
+                {
+                    <div class="p-8 text-center text-outline text-xs">
+                        Chưa có hóa đơn nào được xuất cho phòng của bạn.
+                    </div>
+                }
+                else
+                {
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50/50 border-b border-outline-variant/20 text-outline font-bold">
+                                    <th class="p-4">Kỳ thanh toán</th>
+                                    <th class="p-4 text-right">Tổng tiền</th>
+                                    <th class="p-4 text-center">Trạng thái</th>
+                                    <th class="p-4 text-center">Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-outline-variant/20">
+                                @foreach (var inv in invoices)
+                                {
+                                    <tr class="hover:bg-gray-50/30 transition-colors">
+                                        <td class="p-4 font-semibold text-primary">
+                                            Tháng @inv.BillingMonth / @inv.BillingYear
+                                            <div class="text-[10px] text-outline font-normal mt-0.5">Ngày tạo: @inv.CreatedAt.ToString("dd/MM/yyyy")</div>
+                                        </td>
+                                        <td class="p-4 text-right font-bold text-primary">
+                                            @string.Format("{0:N0}", inv.TotalAmount) đ
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            @if (inv.Status == "Đã thanh toán")
+                                            {
+                                                <span class="bg-emerald-50 text-emerald-700 border border-emerald-100 text-[11px] font-bold px-2.5 py-1 rounded-full">
+                                                    Đã thanh toán
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="bg-red-50 text-red-700 border border-red-100 text-[11px] font-bold px-2.5 py-1 rounded-full">
+                                                    Chưa thanh toán
+                                                </span>
+                                            }
+                                        </td>
+                                        <td class="p-4 text-center">
+                                            <div class="flex items-center justify-center gap-2">
+                                                <a href="/Home/InvoiceDetail/@inv.Id" class="px-3 py-1.5 bg-gray-50 border border-outline-variant/20 hover:bg-gray-100 text-primary font-bold rounded-lg text-xs transition-all flex items-center gap-1">
+                                                    <span class="material-symbols-outlined text-[14px]">receipt</span> Chi tiết
+                                                </a>
+                                                @if (inv.Status == "Chưa thanh toán")
+                                                {
+                                                    <form action="/Home/PayInvoice/@inv.Id" method="post" class="m-0">
+                                                        <button type="submit" class="px-3 py-1.5 bg-secondary text-on-secondary hover:bg-secondary/90 font-bold rounded-lg text-xs transition-all flex items-center gap-1 shadow-sm" onclick="return confirm('Tiến hành thanh toán hóa đơn này trực tuyến qua HanoiHaven Gateway (Mô phỏng)?');">
+                                                            <span class="material-symbols-outlined text-[14px]">payment</span> Thanh toán
+                                                        </button>
+                                                    </form>
+                                                }
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+
+        </div>
+
+        <!-- Bên phải (1 col): Nhật ký báo hỏng / Sửa chữa -->
+        <div class="flex flex-col gap-6">
+            <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm p-6">
+                <h3 class="font-semibold text-primary text-base flex items-center gap-2 border-b border-outline-variant/20 pb-3 mb-4">
+                    <span class="material-symbols-outlined text-secondary">history</span>
+                    Nhật ký Báo hỏng thiết bị
+                </h3>
+
+                @{
+                    var reqs = (IEnumerable<nhatro.Models.MaintenanceRequest>)ViewBag.MaintenanceRequests;
+                }
+                @if (reqs == null || !reqs.Any())
+                {
+                    <div class="p-6 text-center border-2 border-dashed border-outline-variant/40 rounded-xl">
+                        <span class="material-symbols-outlined text-outline/30 text-3xl">build_circle</span>
+                        <p class="text-xs text-outline mt-2 font-medium">Bạn chưa gửi yêu cầu báo hỏng nào.</p>
+                    </div>
+                }
+                else
+                {
+                    <div class="space-y-4">
+                        @foreach (var r in reqs)
+                        {
+                            <div class="p-4 bg-background border border-outline-variant/30 rounded-xl hover:border-outline transition-all flex flex-col gap-2.5">
+                                <div class="flex items-center justify-between gap-2">
+                                    <span class="text-[10px] text-outline font-semibold">@r.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                                    
+                                    @if (r.Status == "Đã hoàn thành")
+                                    {
+                                        <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-100">Đã sửa xong</span>
+                                    }
+                                    else if (r.Status == "Đang xử lý")
+                                    {
+                                        <span class="bg-blue-50 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-100">Đang xử lý</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bg-amber-50 text-amber-700 text-[10px] font-bold px-2 py-0.5 rounded border border-amber-100">Đang chờ</span>
+                                    }
+                                </div>
+                                <p class="text-sm font-semibold text-primary leading-snug">@r.Description</p>
+                                <div class="text-[11px] text-on-surface-variant flex items-center gap-1 font-medium">
+                                    <span class="material-symbols-outlined text-[14px]">home</span> Phòng @(r.Room?.RoomName ?? "")
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+</div>

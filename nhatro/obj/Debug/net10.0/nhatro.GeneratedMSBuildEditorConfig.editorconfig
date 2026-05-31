@@ -78,12 +78,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Home/InvoiceDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbnZvaWNlRGV0YWlsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Home/Messages.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNZXNzYWdlcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Home/MyContracts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxNeUNvbnRyYWN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/Contracts.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcQ29udHJhY3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/CreateContract.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcQ3JlYXRlQ29udHJhY3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/CreateRoom.cshtml]
@@ -94,6 +114,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/EditContract.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcRWRpdENvbnRyYWN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/EditRoom.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcRWRpdFJvb20uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,12 +126,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/InvoiceDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcSW52b2ljZURldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/Invoices.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcSW52b2ljZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/MaintenanceRequests.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWFpbnRlbmFuY2VSZXF1ZXN0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/ManageListings.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWFuYWdlTGlzdGluZ3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/ManageRooms.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWFuYWdlUm9vbXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/Messages.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcTWVzc2FnZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/RecordUtilities.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3duZXJcUmVjb3JkVXRpbGl0aWVzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Asus/source/repos/nhatro/nhatro/Views/Owner/_ViewStart.cshtml]

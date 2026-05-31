@@ -1,24 +1,38 @@
 @model nhatro.Models.RoomListing
 
-<article class="group bg-surface rounded-xl overflow-hidden border border-outline-variant/30 shadow-[0_4px_15px_-4px_rgba(0,0,0,0.04)] hover:shadow-[0_8px_30px_-8px_rgba(0,0,0,0.08)] transition-all duration-300 flex flex-col relative">
-    <!-- Image Area -->
-    <div class="relative aspect-[4/3] w-full overflow-hidden bg-surface-variant">
-        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style="background-image: url('@Model.ImageUrl');">
+<article class="group room-card-hover bg-white rounded-2xl overflow-hidden border border-outline-variant/20 shadow-[0_2px_16px_-4px_rgba(0,0,32,0.06)] flex flex-col relative">
+
+    <!-- ===== IMAGE AREA ===== -->
+    <a href="@Url.Action("Detail", "Home", new { id = Model.Id })" class="block relative overflow-hidden" style="aspect-ratio: 4/3;">
+
+        <!-- Lazy-loaded background image -->
+        <div class="absolute inset-0 bg-cover bg-center transition-transform duration-700 ease-out group-hover:scale-110"
+             style="background-image: url('@Model.ImageUrl');">
         </div>
-        
+
+        <!-- Gradient overlay at bottom -->
+        <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
+
         <!-- Badges Top Left -->
         @if (Model.Rating.HasValue || !string.IsNullOrEmpty(Model.StatusBadge))
         {
-            <div class="absolute top-3 left-3 flex gap-2">
+            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 z-10">
                 @if (Model.Rating.HasValue)
                 {
-                    <span class="bg-primary/90 backdrop-blur-sm text-on-primary px-3 py-1 rounded-full font-label-sm shadow-sm flex items-center gap-1">
-                        <span class="material-symbols-outlined text-[14px]">star</span> @Model.Rating.Value
+                    <span class="bg-white/95 backdrop-blur-sm text-amber-600 px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1 shadow-sm">
+                        <span class="material-symbols-outlined text-[13px] icon-filled" style="color:#f59e0b;">star</span>
+                        @Model.Rating.Value
                     </span>
                 }
-                @if (!string.IsNullOrEmpty(Model.StatusBadge))
+                @if (!string.IsNullOrEmpty(Model.StatusBadge) && Model.StatusBadge == "Đã đăng")
                 {
-                    <span class="bg-secondary/90 backdrop-blur-sm text-on-secondary px-3 py-1 rounded-full font-label-sm shadow-sm">
+                    <span class="bg-secondary/90 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-bold shadow-sm">
+                        Còn trống
+                    </span>
+                }
+                else if (!string.IsNullOrEmpty(Model.StatusBadge) && Model.StatusBadge != "Đã đăng")
+                {
+                    <span class="bg-black/50 backdrop-blur-sm text-white/90 px-2.5 py-1 rounded-full text-xs font-medium shadow-sm">
                         @Model.StatusBadge
                     </span>
                 }
@@ -26,41 +40,51 @@
         }
 
         <!-- Heart / Save Top Right -->
-        <button onclick="toggleFavorite(this, event, @Model.Id)" class="absolute top-3 right-3 p-2 bg-surface/80 backdrop-blur-sm rounded-full @(Model.IsFavorite ? "text-error is-favorite" : "text-on-surface hover:text-error") transition-all hover:bg-surface hover:scale-110 active:scale-95 shadow-sm focus:outline-none z-10">
-            <span class="material-symbols-outlined @(Model.IsFavorite ? "icon-filled" : "") text-[20px] transition-transform duration-300">@(Model.IsFavorite ? "favorite" : "favorite_border")</span>
+        <button onclick="toggleFavorite(this, event, @Model.Id)"
+                class="absolute top-3 right-3 z-10 p-2 bg-white/90 backdrop-blur-sm rounded-full @(Model.IsFavorite ? "text-rose-500 is-favorite" : "text-on-surface/70 hover:text-rose-500") transition-all hover:bg-white hover:scale-110 active:scale-95 shadow-sm focus:outline-none">
+            <span class="material-symbols-outlined @(Model.IsFavorite ? "icon-filled" : "") text-[20px] transition-transform duration-200">
+                @(Model.IsFavorite ? "favorite" : "favorite_border")
+            </span>
         </button>
-    </div>
-    <!-- Content Area -->
-    <div class="p-5 flex flex-col flex-grow bg-surface">
-        <!-- Location & Title -->
-        <div class="mb-2">
-            <div class="flex items-center gap-1 text-outline font-label-sm mb-1 uppercase tracking-wider">
-                <span class="material-symbols-outlined text-[14px]">location_on</span> @Model.Location
-            </div>
-            <h3 class="font-title-md text-primary line-clamp-1 group-hover:text-secondary transition-colors">
-                <a href="@Url.Action("Detail", "Home", new { id = Model.Id })">@Model.Title</a>
-            </h3>
+
+        <!-- Location tag at bottom -->
+        <div class="absolute bottom-3 left-3 z-10 flex items-center gap-1 bg-black/40 backdrop-blur-sm text-white/90 px-2.5 py-1 rounded-full text-xs font-medium">
+            <span class="material-symbols-outlined text-[13px]">location_on</span>
+            @Model.Location
         </div>
-        <!-- Amenities (Stroke icons) -->
-        <div class="flex items-center gap-4 mb-4 text-on-surface-variant">
+    </a>
+
+    <!-- ===== CONTENT AREA ===== -->
+    <div class="p-5 flex flex-col flex-grow">
+
+        <!-- Title -->
+        <h3 class="font-bold text-primary text-[15px] leading-snug mb-3 group-hover:text-secondary transition-colors line-clamp-2">
+            <a href="@Url.Action("Detail", "Home", new { id = Model.Id })">@Model.Title</a>
+        </h3>
+
+        <!-- Amenities -->
+        <div class="flex flex-wrap items-center gap-3 mb-4 text-on-surface-variant">
             @foreach (var amenity in Model.Amenities)
             {
-                <div class="flex items-center gap-1" @(!string.IsNullOrEmpty(amenity.Title) ? $"title=\"{amenity.Title}\"" : "")>
-                    <span class="material-symbols-outlined text-[18px]">@amenity.Icon</span>
-                    <span class="text-sm">@amenity.Text</span>
+                <div class="flex items-center gap-1 text-xs" @(!string.IsNullOrEmpty(amenity.Title) ? $"title=\"{amenity.Title}\"" : "")>
+                    <span class="material-symbols-outlined text-[16px] text-outline">@amenity.Icon</span>
+                    <span class="font-medium">@amenity.Text</span>
                 </div>
             }
         </div>
-        <!-- Price & Action (Bottom aligned) -->
-        <div class="mt-auto pt-4 border-t border-outline-variant/20 flex justify-between items-end">
-            <div>
-                <span class="text-sm text-on-surface-variant">Từ</span>
-                <div class="font-headline-lg-mobile text-primary tracking-tight">
-                    @Model.Price.ToString("N0")<span class="text-sm font-normal text-on-surface-variant ml-1">VNĐ/tháng</span>
+
+        <!-- Price & CTA -->
+        <div class="mt-auto pt-4 border-t border-outline-variant/15 flex justify-between items-center gap-3">
+            <div class="min-w-0">
+                <span class="text-xs text-outline">Từ</span>
+                <div class="font-black text-primary text-xl leading-none tracking-tight mt-0.5">
+                    @Model.Price.ToString("N0")<span class="text-xs font-normal text-outline ml-1">VNĐ/tháng</span>
                 </div>
             </div>
-            <a href="@Url.Action("Detail", "Home", new { id = Model.Id })" class="px-4 py-2 rounded-lg border border-primary text-primary font-label-md hover:bg-primary hover:text-on-primary transition-colors inline-block text-center text-sm font-semibold">
-                Chi tiết
+            <a href="@Url.Action("Detail", "Home", new { id = Model.Id })"
+               class="shrink-0 inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-primary text-white text-xs font-bold hover:bg-secondary transition-colors shadow-sm">
+                Xem chi tiết
+                <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
             </a>
         </div>
     </div>

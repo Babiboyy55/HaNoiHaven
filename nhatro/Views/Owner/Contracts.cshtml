@@ -1,0 +1,110 @@
+@model IEnumerable<nhatro.Models.Contract>
+@{
+    Layout = "_OwnerLayout";
+    ViewData["Title"] = "Quản lý hợp đồng thuê";
+}
+
+<div class="flex flex-col gap-6">
+    <div class="flex justify-between items-center flex-wrap gap-4">
+        <div>
+            <h1 class="text-2xl font-black text-gray-800 tracking-tight">Danh sách Hợp đồng thuê</h1>
+            <p class="text-sm text-gray-500 mt-1">Quản lý và theo dõi hiệu lực hợp đồng giữa chủ trọ và khách thuê</p>
+        </div>
+        <a href="/Owner/CreateContract" class="flex items-center gap-2 bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-2.5 rounded-xl font-bold transition-all shadow-sm">
+            <span class="material-symbols-outlined text-[20px]">add</span>
+            Tạo hợp đồng mới
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="bg-teal-50 border border-teal-200 text-teal-800 px-4 py-3 rounded-xl flex items-center gap-3">
+            <span class="material-symbols-outlined text-teal-600">check_circle</span>
+            <span class="font-semibold text-sm">@TempData["SuccessMessage"]</span>
+        </div>
+    }
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+        @if (!Model.Any())
+        {
+            <div class="p-12 text-center">
+                <span class="material-symbols-outlined text-gray-300 text-5xl">description</span>
+                <p class="text-gray-500 mt-3 font-semibold">Chưa có hợp đồng nào được tạo.</p>
+                <a href="/Owner/CreateContract" class="inline-flex items-center gap-1 text-[#136A64] font-bold hover:underline mt-2">Tạo ngay hợp đồng đầu tiên <span class="material-symbols-outlined text-[16px]">arrow_forward</span></a>
+            </div>
+        }
+        else
+        {
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse text-left text-sm">
+                    <thead>
+                        <tr class="bg-gray-50/50 border-b border-gray-100 text-gray-500 font-bold">
+                            <th class="p-6">Phòng</th>
+                            <th class="p-6">Khách thuê</th>
+                            <th class="p-6">Thời hạn</th>
+                            <th class="p-6 text-right">Giá thuê</th>
+                            <th class="p-6 text-right">Tiền cọc</th>
+                            <th class="p-6 text-center">Trạng thái</th>
+                            <th class="p-6 text-center">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="hover:bg-gray-50/50 transition-colors">
+                                <td class="p-6 font-bold text-gray-800">
+                                    @(item.Room?.RoomName ?? "Phòng đã xóa")
+                                </td>
+                                <td class="p-6">
+                                    <div class="font-semibold text-gray-800">@item.TenantName</div>
+                                    <div class="text-xs text-gray-500">SĐT: @item.TenantPhone</div>
+                                </td>
+                                <td class="p-6 text-gray-600">
+                                    <div>@item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy")</div>
+                                </td>
+                                <td class="p-6 text-right font-semibold text-gray-800">
+                                    @string.Format("{0:N0}", item.RentPrice) đ
+                                </td>
+                                <td class="p-6 text-right font-semibold text-[#136A64]">
+                                    @string.Format("{0:N0}", item.DepositAmount) đ
+                                </td>
+                                <td class="p-6 text-center">
+                                    @if (item.Status == "Đang hoạt động")
+                                    {
+                                        <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-full border border-emerald-100">
+                                            Đang hoạt động
+                                        </span>
+                                    }
+                                    else if (item.Status == "Chờ ký")
+                                    {
+                                        <span class="bg-amber-50 text-amber-700 text-xs font-bold px-3 py-1.5 rounded-full border border-amber-100">
+                                            Chờ ký
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="bg-gray-100 text-gray-500 text-xs font-bold px-3 py-1.5 rounded-full border border-gray-200">
+                                            Đã thanh lý
+                                        </span>
+                                    }
+                                </td>
+                                <td class="p-6 text-center">
+                                    <div class="flex items-center justify-center gap-2">
+                                        <a href="/Owner/EditContract/@item.Id" class="p-2 text-gray-400 hover:text-[#136A64] hover:bg-gray-50 rounded-lg transition-colors" title="Chỉnh sửa">
+                                            <span class="material-symbols-outlined text-[20px]">edit</span>
+                                        </a>
+                                        <form action="/Owner/DeleteContract/@item.Id" method="post" onsubmit="return confirm('Bạn có chắc chắn muốn xóa hợp đồng này?');" class="inline">
+                                            <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-gray-50 rounded-lg transition-colors" title="Xóa">
+                                                <span class="material-symbols-outlined text-[20px]">delete</span>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

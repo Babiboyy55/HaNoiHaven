@@ -1,0 +1,148 @@
+@model IEnumerable<nhatro.Models.ChatMessage>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Tin nhắn của tôi";
+}
+
+<div class="w-full max-w-container-max mx-auto px-4 md:px-8 py-6 md:py-10 flex-grow flex flex-col gap-6">
+    
+    <div>
+        <h1 class="font-headline-lg text-primary text-2xl md:text-3xl font-bold tracking-tight">Hộp thư tin nhắn</h1>
+        <p class="text-sm text-on-surface-variant mt-1">Liên lạc và trao đổi trực tiếp với chủ trọ sở hữu căn hộ.</p>
+    </div>
+
+    <div class="h-[600px] flex bg-white rounded-2xl border border-outline-variant/30 shadow-sm overflow-hidden">
+        
+        <!-- Left Pane: Danh sách Chủ nhà -->
+        <div class="w-[260px] md:w-[300px] border-r border-outline-variant/30 flex flex-col flex-shrink-0 bg-gray-50/20">
+            <div class="p-4 border-b border-outline-variant/30 bg-white">
+                <h2 class="font-bold text-primary text-base">Chủ trọ liên hệ</h2>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto p-3 space-y-1.5 filter-scroll">
+                @if (ViewBag.ChatPartners == null || !((IEnumerable<nhatro.Controllers.ChatPartnerViewModel>)ViewBag.ChatPartners).Any())
+                {
+                    <div class="p-6 text-center text-outline text-xs">
+                        Bạn chưa có hội thoại nào. Bạn có thể nhắn tin với chủ trọ từ trang chi tiết bài đăng phòng.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var partner in (IEnumerable<nhatro.Controllers.ChatPartnerViewModel>)ViewBag.ChatPartners)
+                    {
+                        bool isActive = ViewBag.SelectedPartnerId == partner.UserId;
+                        <a href="/Home/Messages?partnerId=@partner.UserId" class="flex items-center gap-3 p-3 rounded-xl transition-all @(isActive ? "bg-secondary-container/30 text-[#1a6d6e]" : "hover:bg-gray-100/70 text-primary")">
+                            <div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant shadow-sm shrink-0">
+                                <img src="@partner.AvatarUrl" class="w-full h-full object-cover">
+                            </div>
+                            <div class="overflow-hidden flex-1">
+                                <div class="font-bold text-sm truncate">@partner.FullName</div>
+                                <div class="text-[10px] text-outline mt-0.5 truncate font-medium">Đối tác HanoiHaven</div>
+                            </div>
+                        </a>
+                    }
+                }
+            </div>
+        </div>
+
+        <!-- Right Pane: Khung chat -->
+        <div class="flex-grow flex flex-col bg-white">
+            @if (string.IsNullOrEmpty(ViewBag.SelectedPartnerId))
+            {
+                <div class="flex-grow flex flex-col items-center justify-center text-center p-8">
+                    <span class="material-symbols-outlined text-outline/20 text-6xl">chat</span>
+                    <h3 class="font-bold text-primary text-base mt-4">Chọn cuộc trò chuyện</h3>
+                    <p class="text-xs text-outline mt-1 max-w-[280px]">Chọn một chủ nhà ở cột bên trái để xem tin nhắn và trò chuyện.</p>
+                </div>
+            }
+            else
+            {
+                <!-- Header cuộc trò chuyện -->
+                <div class="p-4 border-b border-outline-variant/30 flex items-center justify-between bg-white shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant">
+                            <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(ViewBag.PartnerName)&background=002045&color=fff" class="w-full h-full object-cover">
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-primary text-sm">@ViewBag.PartnerName</h3>
+                            <p class="text-[10px] text-secondary font-bold flex items-center gap-1 mt-0.5">
+                                <span class="w-1.5 h-1.5 bg-secondary rounded-full animate-ping"></span> Trực tuyến
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dòng chảy tin nhắn -->
+                <div class="flex-grow overflow-y-auto p-6 bg-gray-50/20 flex flex-col gap-4 filter-scroll" id="chatBox">
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center text-xs text-outline my-auto">
+                            Nhập lời chào để gửi tin nhắn đến chủ nhà.
+                        </div>
+                    }
+                    else
+                    {
+                        @foreach (var msg in Model)
+                        {
+                            bool isMe = msg.SenderId != ViewBag.SelectedPartnerId;
+                            if (isMe)
+                            {
+                                <!-- Tôi gửi (Tenant -> Owner) - Bên phải -->
+                                <div class="flex justify-end items-end gap-2">
+                                    <div class="max-w-[70%] bg-secondary text-on-secondary px-4 py-2.5 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                        <div>@msg.Content</div>
+                                        <div class="text-[10px] text-secondary-fixed text-right mt-1 font-semibold">@msg.Timestamp.ToString("HH:mm")</div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <!-- Chủ nhà gửi (Owner -> Tenant) - Bên trái -->
+                                <div class="flex justify-start items-end gap-2">
+                                    <div class="w-7 h-7 rounded-full overflow-hidden border border-outline-variant shrink-0 mb-1">
+                                        <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(ViewBag.PartnerName)&background=136A64&color=fff" class="w-full h-full object-cover">
+                                    </div>
+                                    <div class="max-w-[70%] bg-white border border-outline-variant/30 text-primary px-4 py-2.5 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                        <div>@msg.Content</div>
+                                        <div class="text-[10px] text-outline mt-1 font-semibold">@msg.Timestamp.ToString("HH:mm")</div>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+
+                <!-- Input soạn thảo -->
+                <div class="p-4 border-t border-outline-variant/30 bg-white shrink-0">
+                    <form asp-action="SendMessage" method="post" id="chatForm" class="flex gap-2">
+                        <input type="hidden" name="receiverId" value="@ViewBag.SelectedPartnerId" />
+                        <input type="text" name="content" id="messageInput" autocomplete="off" placeholder="Nhập tin nhắn..." class="flex-1 px-4 py-3 rounded-xl border border-outline-variant focus:border-secondary focus:ring-1 focus:ring-secondary outline-none text-sm transition-all" />
+                        <button type="submit" class="bg-secondary text-on-secondary px-5 py-3 rounded-xl font-bold hover:bg-secondary/90 transition-all shadow-sm flex items-center justify-center shrink-0">
+                            <span class="material-symbols-outlined">send</span>
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+    </div>
+</div>
+
+@section Scripts {
+    @if (!string.IsNullOrEmpty(ViewBag.SelectedPartnerId))
+    {
+        <script>
+            // Cuộn xuống tin nhắn mới nhất
+            const chatBox = document.getElementById("chatBox");
+            if (chatBox) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            // Tiêu điểm vào ô nhập tin nhắn
+            const messageInput = document.getElementById("messageInput");
+            if (messageInput) {
+                messageInput.focus();
+            }
+        </script>
+    }
+}

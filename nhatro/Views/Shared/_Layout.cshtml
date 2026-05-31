@@ -119,37 +119,97 @@
             background-color: #c4c6cf;
             border-radius: 4px;
         }
+        /* === HERO GRADIENT BACKGROUND === */
         .hero-pattern {
-            background-color: #faf9fd;
-            background-image: radial-gradient(#e3e2e6 1px, transparent 1px);
-            background-size: 24px 24px;
+            background: linear-gradient(160deg,
+                #eef3ff 0%,
+                #f0fafa 35%,
+                #faf9fd 65%,
+                #fff8f0 100%);
+            position: relative;
         }
+        /* === GLASS CARD === */
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 20px 60px -10px rgba(0, 32, 69, 0.08), 0 0 0 1px rgba(0,0,0,0.04);
         }
+        /* === TEXT GRADIENT === */
         .text-gradient {
-            background: linear-gradient(135deg, #002045 0%, #13696a 100%);
+            background: linear-gradient(135deg, #002045 0%, #13696a 60%, #0d8a8b 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        /* === GLOW BLOBS === */
+        .glow-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            pointer-events: none;
+        }
+        /* === HEADER GLASS EFFECT === */
+        .header-glass {
+            background: rgba(250, 249, 253, 0.88);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            border-bottom: 1px solid rgba(196, 198, 207, 0.25);
+        }
+        /* === HERO SEARCH DIVIDER === */
+        .search-divider {
+            width: 1px;
+            background: linear-gradient(to bottom, transparent, #c4c6cf, transparent);
+            height: 40px;
+            align-self: center;
+        }
+        /* === ROOM CARD HOVER === */
+        .room-card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .room-card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 24px 60px -12px rgba(0, 32, 69, 0.12);
+        }
+        /* === STATS BADGE === */
+        .stat-badge {
+            background: linear-gradient(135deg, rgba(0,32,69,0.06) 0%, rgba(19,105,106,0.06) 100%);
+            border: 1px solid rgba(0,32,69,0.08);
+        }
+        /* === ANIMATE FADE UP === */
+        @@keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-up {
+            animation: fadeUp 0.6s ease forwards;
+        }
+        .animate-fade-up-delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .animate-fade-up-delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .animate-fade-up-delay-3 { animation-delay: 0.35s; opacity: 0; }
+        .animate-fade-up-delay-4 { animation-delay: 0.5s; opacity: 0; }
     </style>
 </head>
 <body class="bg-background text-on-surface font-body-md antialiased selection:bg-secondary-container selection:text-on-secondary-container" hx-boost="true">
     <div class="min-h-screen flex flex-col w-full">
-    <header class="bg-surface shadow-sm w-full sticky top-0 z-50 transition-all duration-300">
+    <header class="header-glass w-full sticky top-0 z-50 transition-all duration-300 shadow-[0_1px_12px_rgba(0,0,0,0.06)]">
         <div class="flex justify-between items-center w-full px-4 md:px-8 py-3 max-w-container-max mx-auto gap-4">
             <!-- Brand -->
             <a class="text-2xl md:text-3xl font-black text-primary tracking-tight whitespace-nowrap" href="@Url.Action("Index", "Home")">HanoiHaven</a>
             
-            <!-- Search Bar -->
-            <form action="@Url.Action("Explore", "Home")" method="get" class="hidden md:flex flex-1 max-w-md mx-4 items-center bg-surface-container-lowest rounded-full px-4 py-2 border border-outline-variant/50 focus-within:border-secondary focus-within:ring-1 focus-within:ring-secondary transition-all shadow-sm">
-                <span class="material-symbols-outlined text-outline mr-2 text-[20px]">search</span>
-                <input name="query" class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline/70 w-full font-body-md py-0 outline-none" placeholder="Tìm kiếm quận, khu vực..." type="text" value="@Context.Request.Query["query"]"/>
-            </form>
+            <!-- Search Bar (ẩn ở trang chủ vì đã có hero search) -->
+            @{
+                var isHomePage = ViewContext.RouteData.Values["controller"]?.ToString() == "Home" &&
+                                 ViewContext.RouteData.Values["action"]?.ToString() == "Index";
+            }
+            @if (!isHomePage)
+            {
+                <form action="@Url.Action("Explore", "Home")" method="get" class="hidden md:flex flex-1 max-w-md mx-4 items-center bg-white/80 rounded-full px-4 py-2 border border-outline-variant/40 focus-within:border-secondary focus-within:ring-2 focus-within:ring-secondary/20 transition-all shadow-sm backdrop-blur-sm">
+                    <span class="material-symbols-outlined text-outline mr-2 text-[20px]">search</span>
+                    <input name="query" class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-outline/70 w-full font-body-md py-0 outline-none" placeholder="Tìm kiếm quận, khu vực..." type="text" value="@Context.Request.Query["query"]"/>
+                </form>
+            }
 
             <!-- Desktop Navigation & Trailing Actions -->
             <div class="flex items-center gap-3 md:gap-6">
@@ -213,6 +273,14 @@
                                     <a href="/RentalRequest/MyHistory" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
                                         <span class="material-symbols-outlined text-[18px]">calendar_month</span>
                                         Lịch hẹn của tôi
+                                    </a>
+                                    <a href="/Home/MyContracts" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">description</span>
+                                        Hợp đồng & Hóa đơn
+                                    </a>
+                                    <a href="/Home/Messages" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
+                                        <span class="material-symbols-outlined text-[18px]">chat</span>
+                                        Tin nhắn của tôi
                                     </a>
                                     @if (User.IsInRole("Owner"))
                                     {

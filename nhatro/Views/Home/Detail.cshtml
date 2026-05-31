@@ -180,8 +180,14 @@
                             <span class="material-symbols-outlined text-[20px]">phone</span> Gọi điện thoại: @ViewBag.OwnerPhone
                         </a>
                         <a href="https://zalo.me/@ViewBag.OwnerPhone" target="_blank" class="w-full border border-secondary text-secondary hover:bg-secondary-container/20 py-3 rounded-lg font-label-md text-center transition-colors flex items-center justify-center gap-2 font-semibold">
-                            <span class="material-symbols-outlined text-[20px]">chat</span> Chat Zalo ngay
+                            <span class="material-symbols-outlined text-[20px]">phone_in_talk</span> Chat Zalo ngay
                         </a>
+                        @if (User.Identity?.IsAuthenticated == true && !string.IsNullOrEmpty(Model.OwnerId))
+                        {
+                            <a href="/Home/Messages?partnerId=@Model.OwnerId" class="w-full border border-secondary text-secondary hover:bg-secondary-container/20 py-3 rounded-lg font-label-md text-center transition-colors flex items-center justify-center gap-2 font-semibold">
+                                <span class="material-symbols-outlined text-[20px]">chat</span> Nhắn tin trực tiếp
+                            </a>
+                        }
                     </div>
                 </div>
 

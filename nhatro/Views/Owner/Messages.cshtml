@@ -1,0 +1,148 @@
+@model IEnumerable<nhatro.Models.ChatMessage>
+@{
+    Layout = "_OwnerLayout";
+    ViewData["Title"] = "Tin nhắn khách thuê";
+}
+
+<div class="h-[calc(100vh-140px)] flex bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] overflow-hidden">
+    
+    <!-- Left Pane: Danh sách người dùng -->
+    <div class="w-[280px] md:w-[320px] border-r border-gray-100 flex flex-col flex-shrink-0 bg-gray-50/20">
+        <div class="p-5 border-b border-gray-100 bg-white">
+            <h2 class="text-lg font-bold text-gray-800 tracking-tight">Hội thoại</h2>
+            <p class="text-xs text-gray-400 mt-0.5">Khách thuê hoặc người đặt lịch hẹn xem phòng</p>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto p-3 space-y-1.5 filter-scroll">
+            @if (ViewBag.ChatPartners == null || !((IEnumerable<nhatro.Controllers.ChatPartnerViewModel>)ViewBag.ChatPartners).Any())
+            {
+                <div class="p-6 text-center text-gray-400 text-xs">
+                    Chưa có đối tác chat nào. Lịch hẹn xem phòng hoặc hợp đồng sẽ kích hoạt các cuộc hội thoại tại đây.
+                </div>
+            }
+            else
+            {
+                @foreach (var partner in (IEnumerable<nhatro.Controllers.ChatPartnerViewModel>)ViewBag.ChatPartners)
+                {
+                    bool isActive = ViewBag.SelectedPartnerId == partner.UserId;
+                    <a href="/Owner/Messages?partnerId=@partner.UserId" class="flex items-center gap-3 p-3.5 rounded-xl transition-all @(isActive ? "bg-[#a2eded]/40 text-[#13696a]" : "hover:bg-gray-100/70 text-gray-700")">
+                        <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-white shadow-sm shrink-0">
+                            <img src="@partner.AvatarUrl" class="w-full h-full object-cover">
+                        </div>
+                        <div class="overflow-hidden flex-1">
+                            <div class="font-bold text-sm truncate">@partner.FullName</div>
+                            <div class="text-[11px] text-gray-400 mt-0.5 truncate">Nhấp để trò chuyện</div>
+                        </div>
+                    </a>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- Right Pane: Khung chat -->
+    <div class="flex-grow flex flex-col bg-white">
+        @if (string.IsNullOrEmpty(ViewBag.SelectedPartnerId))
+        {
+            <!-- Trạng thái trống -->
+            <div class="flex-grow flex flex-col items-center justify-center text-center p-8">
+                <span class="material-symbols-outlined text-gray-200 text-6xl">chat</span>
+                <h3 class="font-bold text-gray-800 text-base mt-4">Bắt đầu cuộc trò chuyện</h3>
+                <p class="text-xs text-gray-500 mt-1 max-w-[280px]">Chọn một khách thuê hoặc người hẹn xem phòng ở danh sách bên trái để nhắn tin.</p>
+            </div>
+        }
+        else
+        {
+            <!-- Chat header -->
+            <div class="p-5 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full overflow-hidden border border-gray-200">
+                        <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(ViewBag.PartnerName)&background=136A64&color=fff" class="w-full h-full object-cover">
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm">@ViewBag.PartnerName</h3>
+                        <p class="text-[10px] text-emerald-500 font-semibold flex items-center gap-1 mt-0.5">
+                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-ping"></span> Trực tuyến
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-2">
+                    <a href="/Owner/Contracts" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-50 rounded-lg transition-colors" title="Xem Hợp đồng">
+                        <span class="material-symbols-outlined text-[20px]">description</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Khung chứa tin nhắn -->
+            <div class="flex-grow overflow-y-auto p-6 bg-gray-50/30 flex flex-col gap-4 filter-scroll" id="chatBox">
+                @if (!Model.Any())
+                {
+                    <div class="text-center text-xs text-gray-400 my-auto">
+                        Các tin nhắn gửi và nhận sẽ được lưu trữ an toàn tại đây.
+                    </div>
+                }
+                else
+                {
+                    @foreach (var msg in Model)
+                    {
+                        bool isMe = msg.SenderId != ViewBag.SelectedPartnerId;
+                        if (isMe)
+                        {
+                            <!-- Tin nhắn của tôi (Owner) gửi đi (Bên phải) -->
+                            <div class="flex justify-end items-end gap-2">
+                                <div class="max-w-[70%] bg-[#136A64] text-white px-4 py-3 rounded-2xl rounded-tr-none text-sm leading-relaxed shadow-sm">
+                                    <div>@msg.Content</div>
+                                    <div class="text-[10px] text-teal-100 text-right mt-1.5 font-medium">@msg.Timestamp.ToString("HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <!-- Tin nhắn của Tenant gửi tới (Bên trái) -->
+                            <div class="flex justify-start items-end gap-2">
+                                <div class="w-7 h-7 rounded-full overflow-hidden border border-gray-200 shrink-0 mb-1">
+                                    <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(ViewBag.PartnerName)&background=002045&color=fff" class="w-full h-full object-cover">
+                                </div>
+                                <div class="max-w-[70%] bg-white border border-gray-100 text-gray-700 px-4 py-3 rounded-2xl rounded-tl-none text-sm leading-relaxed shadow-sm">
+                                    <div>@msg.Content</div>
+                                    <div class="text-[10px] text-gray-400 mt-1.5 font-medium">@msg.Timestamp.ToString("HH:mm")</div>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            </div>
+
+            <!-- Khung soạn thảo tin nhắn -->
+            <div class="p-4 border-t border-gray-100 bg-white shrink-0">
+                <form asp-action="SendMessage" method="post" id="chatForm" class="flex gap-2">
+                    <input type="hidden" name="receiverId" value="@ViewBag.SelectedPartnerId" />
+                    <input type="text" name="content" id="messageInput" autocomplete="off" placeholder="Soạn tin nhắn tại đây..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none text-sm transition-all" />
+                    <button type="submit" class="bg-[#136A64] hover:bg-[#0f544f] text-white px-5 py-3 rounded-xl font-bold transition-all shadow-sm flex items-center justify-center shrink-0">
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </form>
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    @if (!string.IsNullOrEmpty(ViewBag.SelectedPartnerId))
+    {
+        <script>
+            // Cuộn xuống tin nhắn mới nhất
+            const chatBox = document.getElementById("chatBox");
+            if (chatBox) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+
+            // Tiêu điểm vào ô nhập tin nhắn
+            const messageInput = document.getElementById("messageInput");
+            if (messageInput) {
+                messageInput.focus();
+            }
+        </script>
+    }
+}

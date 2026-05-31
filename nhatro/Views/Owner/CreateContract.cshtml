@@ -1,0 +1,106 @@
+@model nhatro.Models.Contract
+@{
+    Layout = "_OwnerLayout";
+    ViewData["Title"] = "Tạo hợp đồng thuê mới";
+}
+
+<div class="max-w-3xl mx-auto">
+    <div class="flex items-center gap-3 mb-6">
+        <a href="/Owner/Contracts" class="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500">
+            <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </a>
+        <div>
+            <h1 class="text-2xl font-black text-gray-800 tracking-tight">Tạo hợp đồng thuê mới</h1>
+            <p class="text-sm text-gray-500 mt-1">Lập hợp đồng thuê và gán khách thuê vào phòng vật lý</p>
+        </div>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.05)] p-8">
+        <form asp-action="CreateContract" method="post" class="space-y-6">
+            <div asp-validation-summary="ModelOnly" class="text-red-500 text-sm"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Chọn phòng -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="RoomId" class="text-sm font-bold text-gray-700">Phòng vật lý</label>
+                    <select asp-for="RoomId" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all">
+                        <option value="">-- Chọn phòng trống --</option>
+                        @foreach (var room in (IEnumerable<nhatro.Models.Room>)ViewBag.Rooms)
+                        {
+                            <option value="@room.Id">@room.RoomName - @room.PropertyType (@room.Status)</option>
+                        }
+                    </select>
+                    <span asp-validation-for="RoomId" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Trạng thái hợp đồng -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="Status" class="text-sm font-bold text-gray-700">Trạng thái hợp đồng</label>
+                    <select asp-for="Status" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all">
+                        <option value="Chờ ký">Chờ ký</option>
+                        <option value="Đang hoạt động">Đang hoạt động</option>
+                        <option value="Đã thanh lý">Đã thanh lý</option>
+                    </select>
+                    <span asp-validation-for="Status" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Tên khách thuê -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="TenantName" class="text-sm font-bold text-gray-700">Họ và tên khách thuê</label>
+                    <input asp-for="TenantName" type="text" placeholder="Nhập họ và tên" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="TenantName" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- SĐT khách thuê -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="TenantPhone" class="text-sm font-bold text-gray-700">Số điện thoại khách thuê</label>
+                    <input asp-for="TenantPhone" type="text" placeholder="Nhập số điện thoại" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="TenantPhone" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Ngày bắt đầu -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="StartDate" class="text-sm font-bold text-gray-700">Ngày bắt đầu thuê</label>
+                    <input asp-for="StartDate" type="date" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="StartDate" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Ngày kết thúc -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="EndDate" class="text-sm font-bold text-gray-700">Ngày hết hạn hợp đồng</label>
+                    <input asp-for="EndDate" type="date" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="EndDate" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Giá thuê -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="RentPrice" class="text-sm font-bold text-gray-700">Giá thuê (VND / Tháng)</label>
+                    <input asp-for="RentPrice" type="number" placeholder="Ví dụ: 3500000" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="RentPrice" class="text-red-500 text-xs"></span>
+                </div>
+
+                <!-- Tiền cọc -->
+                <div class="flex flex-col gap-2">
+                    <label asp-for="DepositAmount" class="text-sm font-bold text-gray-700">Tiền đặt cọc cọc (VND)</label>
+                    <input asp-for="DepositAmount" type="number" placeholder="Ví dụ: 5000000" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all" />
+                    <span asp-validation-for="DepositAmount" class="text-red-500 text-xs"></span>
+                </div>
+            </div>
+
+            <!-- Điều khoản bổ sung -->
+            <div class="flex flex-col gap-2">
+                <label asp-for="ContractTerms" class="text-sm font-bold text-gray-700">Điều khoản hợp đồng (Mô tả, ghi chú khác)</label>
+                <textarea asp-for="ContractTerms" rows="4" placeholder="Nhập các điều kiện thanh toán, nội quy phòng trọ, quy định phạt khi phá vỡ hợp đồng..." class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-1 focus:ring-[#136A64] outline-none transition-all"></textarea>
+                <span asp-validation-for="ContractTerms" class="text-red-500 text-xs"></span>
+            </div>
+
+            <!-- Nút gửi -->
+            <div class="flex justify-end gap-3 pt-4 border-t border-gray-100">
+                <a href="/Owner/Contracts" class="px-6 py-3 border border-gray-200 hover:bg-gray-50 rounded-xl font-bold transition-all text-gray-600">Hủy bỏ</a>
+                <button type="submit" class="px-6 py-3 bg-[#136A64] hover:bg-[#0f544f] text-white rounded-xl font-bold transition-all shadow-sm">
+                    Tạo hợp đồng
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

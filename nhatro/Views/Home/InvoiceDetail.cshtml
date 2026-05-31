@@ -1,0 +1,202 @@
+@model nhatro.Models.Invoice
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Chi tiết hóa đơn phòng " + (Model.Room?.RoomName ?? "");
+}
+
+<style>
+    @@media print {
+        header, footer, .no-print, .action-buttons {
+            display: none !important;
+        }
+        main {
+            padding: 0 !important;
+            margin: 0 !important;
+            background: white !important;
+        }
+        body {
+            background: white !important;
+            color: black !important;
+        }
+        .print-card {
+            border: none !important;
+            box-shadow: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+    }
+</style>
+
+<div class="w-full max-w-2xl mx-auto px-4 md:px-8 py-6 md:py-10 flex-grow flex flex-col gap-6">
+    
+    <!-- Tiêu đề & Thao tác (no-print) -->
+    <div class="flex justify-between items-center no-print">
+        <div class="flex items-center gap-3">
+            <a href="/Home/MyContracts" class="p-2 hover:bg-gray-100 rounded-xl transition-colors text-gray-500">
+                <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+            </a>
+            <div>
+                <h1 class="text-xl font-bold text-primary">Chi tiết hóa đơn</h1>
+                <p class="text-xs text-on-surface-variant">Mã hóa đơn: #INV-@Model.Id-@Model.BillingMonth@Model.BillingYear</p>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2 action-buttons">
+            <button onclick="window.print();" class="flex items-center gap-1.5 bg-gray-50 border border-outline-variant/35 hover:bg-gray-100 text-primary px-4 py-2.5 rounded-xl text-sm font-bold transition-all">
+                <span class="material-symbols-outlined text-[18px]">print</span>
+                In hóa đơn
+            </button>
+            @if (Model.Status == "Chưa thanh toán")
+            {
+                <form action="/Home/PayInvoice/@Model.Id" method="post" class="m-0">
+                    <button type="submit" class="flex items-center gap-1.5 bg-secondary text-on-secondary px-4 py-2.5 rounded-xl text-sm font-bold shadow-sm hover:bg-secondary/90 transition-all" onclick="return confirm('Thanh toán hóa đơn trực tuyến giả lập?');">
+                        <span class="material-symbols-outlined text-[18px]">payment</span>
+                        Thanh toán ngay
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
+
+    <!-- Hóa đơn chính (Bản in) -->
+    <div class="bg-white rounded-2xl border border-outline-variant/30 shadow-sm p-8 md:p-12 print-card flex flex-col gap-8">
+        
+        <!-- Header -->
+        <div class="flex justify-between items-start border-b border-outline-variant/20 pb-6 flex-wrap gap-4">
+            <div>
+                <h2 class="text-2xl font-black text-primary tracking-tight">HanoiHaven</h2>
+                <p class="text-xs text-outline mt-1">Hệ thống Thuê phòng Uy tín Hà Nội</p>
+            </div>
+            <div class="text-right">
+                <h3 class="text-lg font-bold text-primary">HÓA ĐƠN CHI TIẾT DỊCH VỤ</h3>
+                <p class="text-sm text-on-surface-variant font-semibold mt-1">Kỳ thanh toán: Tháng @Model.BillingMonth / @Model.BillingYear</p>
+                <p class="text-xs text-outline mt-0.5">Ngày tạo hóa đơn: @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+            </div>
+        </div>
+
+        <!-- Thông tin bên thuê & bên cho thuê -->
+        <div class="grid grid-cols-2 gap-8 text-sm">
+            <div>
+                <h4 class="text-xs text-outline uppercase font-bold tracking-wider mb-2">Đại diện chủ nhà</h4>
+                <div class="font-bold text-primary">HanoiHaven Premium Host</div>
+                <div class="text-xs text-on-surface-variant mt-1">Địa chỉ phòng trọ: @(Model.Room?.PropertyType ?? "Phòng trọ") - Phòng @(Model.Room?.RoomName ?? "")</div>
+            </div>
+            <div>
+                <h4 class="text-xs text-outline uppercase font-bold tracking-wider mb-2">Khách thuê phòng</h4>
+                <div class="font-bold text-primary">@Model.TenantName</div>
+                <div class="text-xs text-on-surface-variant mt-1">Số phòng đang ở: Phòng @(Model.Room?.RoomName ?? "")</div>
+            </div>
+        </div>
+
+        <!-- Chi tiết thanh toán -->
+        <div class="border border-outline-variant/20 rounded-xl overflow-hidden mt-2">
+            <table class="w-full text-left text-sm border-collapse">
+                <thead>
+                    <tr class="bg-gray-50 text-outline font-bold border-b border-outline-variant/20">
+                        <th class="p-4">Hạng mục dịch vụ</th>
+                        <th class="p-4 text-center">Chỉ số sử dụng</th>
+                        <th class="p-4 text-right">Đơn giá</th>
+                        <th class="p-4 text-right">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-outline-variant/20 text-on-surface-variant">
+                    <!-- Tiền phòng -->
+                    <tr>
+                        <td class="p-4 font-semibold text-primary">Tiền thuê phòng trọ</td>
+                        <td class="p-4 text-center text-outline">-</td>
+                        <td class="p-4 text-right">@string.Format("{0:N0}", Model.RoomPrice) đ</td>
+                        <td class="p-4 text-right font-bold text-primary">@string.Format("{0:N0}", Model.RoomPrice) đ</td>
+                    </tr>
+                    
+                    <!-- Tiền điện -->
+                    @{
+                        double elecDiff = Model.ElectricityNew - Model.ElectricityOld;
+                        decimal elecTotal = (decimal)elecDiff * Model.ElectricityPrice;
+                    }
+                    @if (elecDiff >= 0)
+                    {
+                        <tr>
+                            <td class="p-4">
+                                <div class="font-semibold text-primary">Tiêu thụ Điện sinh hoạt</div>
+                                <div class="text-xs text-outline mt-0.5">Số mới: @Model.ElectricityNew | Số cũ: @Model.ElectricityOld</div>
+                            </td>
+                            <td class="p-4 text-center">@elecDiff kWh</td>
+                            <td class="p-4 text-right">@string.Format("{0:N0}", Model.ElectricityPrice) đ</td>
+                            <td class="p-4 text-right font-bold text-primary">@string.Format("{0:N0}", elecTotal) đ</td>
+                        </tr>
+                    }
+
+                    <!-- Tiền nước -->
+                    @{
+                        double waterDiff = Model.WaterNew - Model.WaterOld;
+                        decimal waterTotal = (decimal)waterDiff * Model.WaterPrice;
+                    }
+                    @if (waterDiff >= 0)
+                    {
+                        <tr>
+                            <td class="p-4">
+                                <div class="font-semibold text-primary">Tiêu thụ Nước sinh hoạt</div>
+                                <div class="text-xs text-outline mt-0.5">Số mới: @Model.WaterNew | Số cũ: @Model.WaterOld</div>
+                            </td>
+                            <td class="p-4 text-center">@waterDiff m³</td>
+                            <td class="p-4 text-right">@string.Format("{0:N0}", Model.WaterPrice) đ</td>
+                            <td class="p-4 text-right font-bold text-primary">@string.Format("{0:N0}", waterTotal) đ</td>
+                        </tr>
+                    }
+
+                    <!-- Phí dịch vụ khác -->
+                    @if (Model.ServiceFees > 0)
+                    {
+                        <tr>
+                            <td class="p-4 font-semibold text-primary">Phí cố định dịch vụ khác (Wifi, vệ sinh,...)</td>
+                            <td class="p-4 text-center text-outline">-</td>
+                            <td class="p-4 text-right">@string.Format("{0:N0}", Model.ServiceFees) đ</td>
+                            <td class="p-4 text-right font-bold text-primary">@string.Format("{0:N0}", Model.ServiceFees) đ</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tổng tiền & Trạng thái -->
+        <div class="flex justify-between items-center border-t border-outline-variant/20 pt-6 flex-wrap gap-4">
+            <div>
+                <span class="text-xs uppercase font-bold text-outline tracking-wider">Trạng thái hóa đơn</span>
+                <div class="mt-1">
+                    @if (Model.Status == "Đã thanh toán")
+                    {
+                        <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold px-3 py-1.5 rounded-full inline-block">
+                            ĐÃ THANH TOÁN (Ngày @(Model.PaymentDate?.ToString("dd/MM/yyyy") ?? "-"))
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="bg-red-50 text-red-700 border border-red-200 text-xs font-bold px-3 py-1.5 rounded-full inline-block">
+                            CHƯA THANH TOÁN
+                        </span>
+                    }
+                </div>
+            </div>
+            
+            <div class="text-right">
+                <span class="text-xs uppercase font-bold text-outline tracking-wider">Tổng cộng cần thanh toán</span>
+                <div class="text-3xl font-black text-secondary mt-1">
+                    @string.Format("{0:N0}", Model.TotalAmount) VNĐ
+                </div>
+            </div>
+        </div>
+
+        <!-- Chữ ký xác minh -->
+        <div class="grid grid-cols-2 gap-8 text-center text-sm pt-8 border-t border-dashed border-outline-variant/20 mt-4">
+            <div>
+                <div class="font-bold text-outline uppercase text-xs tracking-wider mb-12">Khách thuê phòng</div>
+                <div class="text-outline/70 italic text-xs">(Ký và ghi rõ họ tên)</div>
+            </div>
+            <div>
+                <div class="font-bold text-outline uppercase text-xs tracking-wider mb-12">Chủ nhà trọ</div>
+                <div class="text-outline/70 italic text-xs">(Ký và ghi rõ họ tên)</div>
+            </div>
+        </div>
+
+    </div>
+</div>
