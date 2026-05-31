@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("nhatro")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c5d8d8923658cea54aee106c35665aec4e619987")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8a3de6698e124736186b34e03d65e6b34d9d6e7e")]
 [assembly: System.Reflection.AssemblyProductAttribute("nhatro")]
 [assembly: System.Reflection.AssemblyTitleAttribute("nhatro")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

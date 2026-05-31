@@ -28,6 +28,10 @@ namespace nhatro.Models
         [Required(ErrorMessage = "Vui lòng nhập diện tích (m2)")]
         public double Area { get; set; }
 
+        public string? Description { get; set; }
+
+        public string? Rules { get; set; }
+
         public string ImageUrl { get; set; } = string.Empty;
 
         public string StatusBadge { get; set; } = "Bản nháp"; 

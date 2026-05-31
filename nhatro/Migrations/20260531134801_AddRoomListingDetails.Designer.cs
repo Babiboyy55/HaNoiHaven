@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using nhatro.Models;
 
@@ -11,9 +12,11 @@ using nhatro.Models;
 namespace nhatro.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260531134801_AddRoomListingDetails")]
+    partial class AddRoomListingDetails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -462,39 +465,6 @@ namespace nhatro.Migrations
                     b.ToTable("RentalRequests");
                 });
 
-            modelBuilder.Entity("nhatro.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoomListingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("TenantId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoomListingId");
-
-                    b.HasIndex("TenantId");
-
-                    b.ToTable("Reviews");
-                });
-
             modelBuilder.Entity("nhatro.Models.Room", b =>
                 {
                     b.Property<int>("Id")
@@ -693,25 +663,6 @@ namespace nhatro.Migrations
                         .IsRequired();
 
                     b.Navigation("RoomListing");
-                });
-
-            modelBuilder.Entity("nhatro.Models.Review", b =>
-                {
-                    b.HasOne("nhatro.Models.RoomListing", "RoomListing")
-                        .WithMany()
-                        .HasForeignKey("RoomListingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("nhatro.Models.ApplicationUser", "Tenant")
-                        .WithMany()
-                        .HasForeignKey("TenantId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("RoomListing");
-
-                    b.Navigation("Tenant");
                 });
 
             modelBuilder.Entity("nhatro.Models.RoomImage", b =>

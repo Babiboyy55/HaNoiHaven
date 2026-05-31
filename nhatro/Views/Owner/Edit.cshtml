@@ -48,6 +48,50 @@
                 </div>
             </div>
 
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Mô tả chi tiết <span class="text-red-500">*</span></label>
+                <textarea asp-for="Description" rows="4" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-2 focus:ring-[#136A64]/20 outline-none transition-all resize-none"></textarea>
+            </div>
+
+            @{
+                var currentAmenities = Model.Amenities?.Select(a => a.Text).ToList() ?? new List<string>();
+            }
+
+            <div class="mb-6">
+                <label class="block text-sm font-semibold text-gray-700 mb-3">Tiện nghi có sẵn</label>
+                <div class="grid grid-cols-2 md:grid-cols-3 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-100">
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="Điều hòa" @(currentAmenities.Contains("Điều hòa") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">Điều hòa</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="WiFi tốc độ cao" @(currentAmenities.Contains("WiFi tốc độ cao") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">WiFi tốc độ cao</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="Chỗ để xe" @(currentAmenities.Contains("Chỗ để xe") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">Chỗ để xe</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="Bếp riêng" @(currentAmenities.Contains("Bếp riêng") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">Bếp riêng</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="Giường nệm" @(currentAmenities.Contains("Giường nệm") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">Giường nệm</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" name="selectedAmenities" value="Máy giặt" @(currentAmenities.Contains("Máy giặt") ? "checked" : "") class="w-5 h-5 accent-[#136A64] cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 group-hover:text-[#136A64] transition-colors">Máy giặt chung/riêng</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-8">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Quy định chung & An toàn</label>
+                <textarea asp-for="Rules" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-[#136A64] focus:ring-2 focus:ring-[#136A64]/20 outline-none transition-all resize-none"></textarea>
+            </div>
+
             <div class="mb-8">
                 <label class="block text-sm font-semibold text-gray-700 mb-2">Tải thêm ảnh mới (Tùy chọn)</label>
                 <div class="relative bg-gray-50 rounded-xl border-2 border-dashed border-gray-300 p-6 flex flex-col items-center justify-center hover:bg-gray-100 hover:border-[#136A64] transition-all">

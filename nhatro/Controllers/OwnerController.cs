@@ -69,8 +69,8 @@ namespace nhatro.Controllers
         }
 
         [HttpPost]
-        // Bổ sung tham số List<IFormFile> uploadedFiles để hứng nhiều ảnh từ form
-        public async Task<IActionResult> Create(RoomListing model, List<IFormFile> uploadedFiles)
+        // Bổ sung tham số List<IFormFile> để hứng ảnh VÀ List<string> để hứng tiện ích
+        public async Task<IActionResult> Create(RoomListing model, List<IFormFile> uploadedFiles, List<string> selectedAmenities)
         {
             // Bỏ qua kiểm tra các trường tự động gán ở Backend
             ModelState.Remove("OwnerId");
@@ -81,8 +81,16 @@ namespace nhatro.Controllers
             {
                 var user = await _userManager.GetUserAsync(User);
                 model.OwnerId = user.Id;
-                model.StatusBadge = "Chờ duyệt";
-                
+                model.StatusBadge = "Chờ duyệt"; // Để Admin duyệt bài
+
+                // --- XỬ LÝ TIỆN ÍCH (AMENITIES) ---
+                if (selectedAmenities != null && selectedAmenities.Any())
+                {
+                    model.Amenities = selectedAmenities
+                        .Select(a => new RoomAmenity { Icon = "check", Text = a, Title = a })
+                        .ToList();
+                }
+
                 // 1. Lưu thông tin phòng trước để DB tạo ra ID (Mã bài đăng)
                 _context.RoomListings.Add(model);
                 await _context.SaveChangesAsync(); 
@@ -131,7 +139,7 @@ namespace nhatro.Controllers
                     await _context.SaveChangesAsync();
                 }
 
-                return RedirectToAction("Index");
+                return RedirectToAction("ManageListings"); // Thường đăng xong sẽ về trang quản lý tin
             }
             
             return View(model);
@@ -191,32 +199,48 @@ namespace nhatro.Controllers
 
         // --- 4. TÍNH NĂNG SỬA BÀI ĐĂNG (LƯU DỮ LIỆU) ---
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, RoomListing model)
+        // Bổ sung thêm List<string> selectedAmenities giống như bên Create
+        public async Task<IActionResult> Edit(int id, RoomListing model, List<IFormFile> uploadedFiles, List<string> selectedAmenities)
         {
-            // Bỏ qua kiểm tra các trường tự động
-            ModelState.Remove("OwnerId");
-            ModelState.Remove("RoomImages");
-
             if (id != model.Id) return NotFound();
+
+            ModelState.Remove("OwnerId");
+            ModelState.Remove("ImageUrl");
+            ModelState.Remove("RoomImages");
 
             if (ModelState.IsValid)
             {
                 var existingRoom = await _context.RoomListings.FindAsync(id);
                 if (existingRoom == null) return NotFound();
 
-                // Cập nhật thông tin mới
+                // 1. Cập nhật các thông tin cơ bản
                 existingRoom.Title = model.Title;
                 existingRoom.Location = model.Location;
                 existingRoom.Price = model.Price;
                 existingRoom.Area = model.Area;
-                
-                // Nếu người dùng có nhập Link ảnh mới thì cập nhật
-                if (!string.IsNullOrEmpty(model.ImageUrl))
+
+                // 2. Cập nhật 3 trường thông tin chi tiết mới
+                existingRoom.Description = model.Description;
+                existingRoom.Rules = model.Rules;
+
+                // Xử lý tiện ích thành danh sách RoomAmenity giống bên Create
+                if (selectedAmenities != null && selectedAmenities.Any())
                 {
-                    existingRoom.ImageUrl = model.ImageUrl;
+                    existingRoom.Amenities = selectedAmenities
+                        .Select(a => new RoomAmenity { Icon = "check", Text = a, Title = a })
+                        .ToList();
+                }
+                else
+                {
+                    existingRoom.Amenities = new List<RoomAmenity>();
                 }
 
+                // 3. Xử lý ảnh mới tải lên (Giữ nguyên đoạn code xử lý file ảnh cũ của bạn ở đây)
+                // if (uploadedFiles != null && uploadedFiles.Count > 0) { ... }
+
+                _context.Update(existingRoom);
                 await _context.SaveChangesAsync();
+                
                 return RedirectToAction(nameof(ManageListings));
             }
             return View(model);

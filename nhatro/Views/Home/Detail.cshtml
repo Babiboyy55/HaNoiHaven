@@ -114,46 +114,122 @@
                 </div>
             </div>
 
-            <!-- Description -->
-            <div>
-                <h3 class="font-title-md text-primary font-bold mb-3 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-secondary">notes</span> Mô tả chi tiết không gian
-                </h3>
-                <div class="text-on-surface-variant leading-relaxed text-body-md space-y-4">
-                    <p>Chào mừng bạn đến với căn hộ cao cấp tại khu vực trung tâm Hà Nội. Phòng trọ được thiết kế vô cùng tinh tế, tận dụng tối đa ánh sáng tự nhiên tạo nên một không gian thoáng đãng, sang trọng nhưng không kém phần ấm cúng.</p>
-                    <p>Phòng đã được trang bị đầy đủ nội thất cơ bản, thiết kế theo phong cách tối giản hiện đại. Khách thuê chỉ cần xách vali đến ở ngay. Vị trí nhà trọ nằm trong khu dân trí cao, an ninh nghiêm ngặt 24/7, gần chợ, các trung tâm thương mại và các tuyến xe công cộng vô cùng tiện lợi cho việc di chuyển hàng ngày của sinh viên và người đi làm.</p>
+            @if (!string.IsNullOrEmpty(Model.Description))
+            {
+                <div>
+                    <h3 class="font-title-md text-primary font-bold mb-3 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">notes</span> Mô tả chi tiết không gian
+                    </h3>
+                    <div class="text-on-surface-variant leading-relaxed text-body-md whitespace-pre-line space-y-4">
+                        @Model.Description
+                    </div>
                 </div>
-            </div>
+            }
 
-            <!-- Amenities -->
-            <div>
-                <h3 class="font-title-md text-primary font-bold mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-secondary">verified_user</span> Các tiện ích đi kèm sẵn có
-                </h3>
-                <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                    @foreach (var amenity in Model.Amenities)
-                    {
-                        <div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 bg-surface-container-low hover:border-secondary/40 hover:bg-surface-container transition-all group">
-                            <span class="material-symbols-outlined text-[24px] text-outline group-hover:text-secondary transition-colors">@amenity.Icon</span>
-                            <div>
-                                <p class="text-sm font-semibold text-primary">@amenity.Text</p>
-                                <p class="text-[11px] text-on-surface-variant">@(amenity.Title ?? "Tiện ích sẵn")</p>
+            @if (Model.Amenities != null && Model.Amenities.Any())
+            {
+                <div>
+                    <h3 class="font-title-md text-primary font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">verified_user</span> Các tiện ích đi kèm sẵn có
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        @foreach (var amenity in Model.Amenities)
+                        {
+                            <div class="flex items-center gap-3 p-3 rounded-lg border border-outline-variant/20 bg-surface-container-low hover:border-secondary/40 hover:bg-surface-container transition-all group">
+                                <span class="material-symbols-outlined text-[24px] text-outline group-hover:text-secondary transition-colors">@amenity.Icon</span>
+                                <div>
+                                    <p class="text-sm font-semibold text-primary">@amenity.Text</p>
+                                    <p class="text-[11px] text-on-surface-variant">@(amenity.Title ?? "Tiện ích sẵn có")</p>
+                                </div>
                             </div>
+                        }
+                    </div>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.Rules))
+            {
+                <div class="border-t border-outline-variant/30 pt-6">
+                    <h3 class="font-title-md text-primary font-bold mb-4 flex items-center gap-2">
+                        <span class="material-symbols-outlined text-secondary">gavel</span> Quy định chung & An toàn
+                    </h3>
+                    <div class="text-on-surface-variant leading-relaxed text-sm whitespace-pre-line">
+                        @Model.Rules
+                    </div>
+                </div>
+            }
+            <div class="border-t border-outline-variant/30 pt-8 mt-2">
+                <h3 class="font-title-md text-primary font-bold mb-6 flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-amber-500 icon-filled">star</span> 
+                        Nhận xét từ Khách thuê
+                    </div>
+                    @if (ViewBag.ReviewCount > 0)
+                    {
+                        <span class="text-sm font-normal text-on-surface-variant">@ViewBag.ReviewCount đánh giá • Trung bình @ViewBag.AverageRating/5</span>
+                    }
+                </h3>
+
+                @if (User.Identity?.IsAuthenticated == true && User.IsInRole("Renter"))
+                {
+                    <form asp-controller="Home" asp-action="SubmitReview" method="post" class="bg-surface-container-lowest border border-outline-variant/40 p-5 rounded-2xl mb-8 shadow-sm">
+                        <input type="hidden" name="roomListingId" value="@Model.Id" />
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-primary mb-2">Bạn đánh giá phòng này mấy sao?</label>
+                            <select name="rating" class="w-full sm:w-56 bg-surface-container-low border border-outline-variant rounded-lg p-2.5 text-sm outline-none focus:border-secondary">
+                                <option value="5">⭐⭐⭐⭐⭐ Tuyệt vời (5)</option>
+                                <option value="4">⭐⭐⭐⭐ Rất tốt (4)</option>
+                                <option value="3">⭐⭐⭐ Bình thường (3)</option>
+                                <option value="2">⭐⭐ Tạm được (2)</option>
+                                <option value="1">⭐ Kém (1)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-primary mb-2">Chi tiết nhận xét</label>
+                            <textarea name="comment" rows="3" required placeholder="Chia sẻ trải nghiệm của bạn về không gian, tiện ích, hay chủ nhà..." class="w-full bg-surface-container-low border border-outline-variant rounded-lg p-3 text-sm outline-none focus:border-secondary focus:ring-1 focus:ring-secondary resize-none"></textarea>
+                        </div>
+                        
+                        <button type="submit" class="bg-[#136A64] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#0f544f] transition-colors flex items-center gap-2 text-sm">
+                            <span class="material-symbols-outlined text-[18px]">send</span> Gửi đánh giá
+                        </button>
+                    </form>
+                }
+
+                <div class="flex flex-col gap-4">
+                    @if (ViewBag.Reviews != null && ((IEnumerable<dynamic>)ViewBag.Reviews).Any())
+                    {
+                        foreach (var review in ViewBag.Reviews)
+                        {
+                            <div class="bg-surface-container-low p-4 rounded-xl border border-outline-variant/20">
+                                <div class="flex items-center justify-between mb-2">
+                                    <div class="flex items-center gap-3">
+                                        <img src="https://ui-avatars.com/api/?name=@Uri.EscapeDataString(review.Tenant?.FullName ?? "User")&background=random&color=fff" class="w-10 h-10 rounded-full" />
+                                        <div>
+                                            <p class="font-bold text-sm text-primary">@(review.Tenant?.FullName ?? "Khách ẩn danh")</p>
+                                            <p class="text-[11px] text-on-surface-variant">@review.CreatedAt.ToString("dd/MM/yyyy")</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex text-amber-400">
+                                        @for (int i = 0; i < review.Rating; i++)
+                                        {
+                                            <span class="material-symbols-outlined text-[16px] icon-filled">star</span>
+                                        }
+                                    </div>
+                                </div>
+                                <p class="text-sm text-on-surface-variant leading-relaxed mt-2">@review.Comment</p>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="text-center py-8 bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant/50">
+                            <span class="material-symbols-outlined text-[32px] text-outline/50 mb-2">rate_review</span>
+                            <p class="text-sm text-on-surface-variant">Chưa có đánh giá nào cho phòng này.</p>
                         </div>
                     }
                 </div>
-            </div>
-
-            <!-- Safety & Regulations -->
-            <div class="border-t border-outline-variant/30 pt-6">
-                <h3 class="font-title-md text-primary font-bold mb-4 flex items-center gap-2">
-                    <span class="material-symbols-outlined text-secondary">gavel</span> Quy định chung & An toàn
-                </h3>
-                <ul class="space-y-2 text-sm text-on-surface-variant">
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span> Giờ giấc tự do, chìa khóa trao tay (cửa vân tay thông minh)</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span> Bảo đảm phòng ngừa cháy nổ (có thiết bị báo cháy, bình cứu hỏa mỗi tầng)</li>
-                    <li class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-secondary">check_circle</span> Giữ gìn vệ sinh chung, khu giặt sấy dùng chung sạch sẽ gọn gàng</li>
-                </ul>
             </div>
         </div>
 

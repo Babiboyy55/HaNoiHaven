@@ -19,5 +19,6 @@ namespace nhatro.Models
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<ChatMessage> ChatMessages { get; set; }
         public DbSet<MaintenanceRequest> MaintenanceRequests { get; set; }
+        public DbSet<Review> Reviews { get; set; }
     }
 }

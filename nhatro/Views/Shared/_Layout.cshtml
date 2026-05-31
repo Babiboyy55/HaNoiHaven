@@ -260,50 +260,47 @@
                         <div class="flex items-center gap-3 pl-2 md:pl-4 border-l border-outline-variant/50 ml-1">
                             
                             <!-- User Dropdown Menu -->
-                            <div class="relative group cursor-pointer hidden sm:block">
-                                <button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant hover:border-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/50 shrink-0">
+                            <div class="relative group cursor-pointer hidden sm:block ml-2">
+                                
+                                <button class="w-10 h-10 rounded-full overflow-hidden border border-outline-variant group-hover:border-secondary transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/50 shrink-0">
                                     <img alt="User profile" class="w-full h-full object-cover" src="https://ui-avatars.com/api/?name=@User.Identity.Name&background=002045&color=fff"/>
                                 </button>
-                                <!-- Dropdown -->
-                                <div class="absolute right-0 top-full mt-2 w-56 bg-surface-container-lowest rounded-2xl shadow-xl border border-outline-variant/30 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
-                                    <div class="px-4 py-3 border-b border-outline-variant/20">
-                                        <p class="text-xs text-outline font-medium">Đã đăng nhập với</p>
-                                        <p class="text-sm font-semibold text-primary truncate">@User.Identity.Name</p>
+
+                                <div class="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                                    
+                                    <div class="p-4 border-b border-gray-50">
+                                        <p class="text-sm font-bold text-gray-800 truncate">@User.Identity.Name</p>
+                                        <p class="text-xs text-gray-500 mt-0.5">Khách tìm thuê</p>
                                     </div>
-                                    <a href="/RentalRequest/MyHistory" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">calendar_month</span>
-                                        Lịch hẹn của tôi
-                                    </a>
-                                    <a href="/Home/MyContracts" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">description</span>
-                                        Hợp đồng & Hóa đơn
-                                    </a>
-                                    <a href="/Home/Messages" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-                                        <span class="material-symbols-outlined text-[18px]">chat</span>
-                                        Tin nhắn của tôi
-                                    </a>
-                                    @if (User.IsInRole("Owner"))
-                                    {
-                                        <a href="/Owner" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">dashboard</span>
-                                            Kênh Chủ Trọ
+                                    
+                                    <div class="py-2">
+                                        
+                                        <a href="/RentalRequest/MyRequests" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#136A64] transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">send</span> Yêu cầu thuê / Đặt lịch
                                         </a>
-                                    }
-                                    @if (User.IsInRole("Admin"))
-                                    {
-                                        <a href="/Admin" class="flex items-center gap-3 px-4 py-2.5 text-sm text-on-surface-variant hover:bg-surface-container hover:text-primary transition-colors">
-                                            <span class="material-symbols-outlined text-[18px]">admin_panel_settings</span>
-                                            Trang Quản Trị
+                                        
+                                        <a href="/Home/MyContracts" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#136A64] transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">description</span> Hợp đồng & Hóa đơn
                                         </a>
-                                    }
-                                    <div class="border-t border-outline-variant/20 mt-1 pt-1">
+                                        
+                                        <a href="/Home/MyContracts" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#136A64] transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">build</span> Yêu cầu sửa chữa
+                                        </a>
+                                        
+                                        <a href="/Home/Messages" class="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 hover:text-[#136A64] transition-colors">
+                                            <span class="material-symbols-outlined text-[20px]">chat</span> Tin nhắn với Chủ trọ
+                                        </a>
+                                        
+                                    </div>
+
+                                    <div class="p-2 border-t border-gray-50">
                                         <form asp-controller="Account" asp-action="Logout" method="post" class="m-0 p-0">
-                                            <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error/5 transition-colors">
-                                                <span class="material-symbols-outlined text-[18px]">logout</span>
-                                                Đăng xuất
+                                            <button type="submit" class="w-full flex items-center gap-3 px-3 py-2 text-sm text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium">
+                                                <span class="material-symbols-outlined text-[20px]">logout</span> Đăng xuất
                                             </button>
                                         </form>
                                     </div>
+                                    
                                 </div>
                             </div>
                         </div>

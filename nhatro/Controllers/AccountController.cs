@@ -46,7 +46,7 @@ namespace nhatro.Controllers
                     else if (roles.Contains("Owner"))
                     {
                         // TODO: Sau này bạn tạo OwnerController thì đổi về đó
-                        return RedirectToAction("Index", "Owner"); 
+                        return RedirectToAction("Index", "Owner");
                     }
                     else
                     {
@@ -70,47 +70,47 @@ namespace nhatro.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            // 1. Kiểm tra dữ liệu form có hợp lệ không
             if (ModelState.IsValid)
             {
-                // 1. Tạo đối tượng ApplicationUser từ dữ liệu Form
+                // 2. Tạo đối tượng User mới (Chú ý: map đúng FullName, Email)
                 var user = new ApplicationUser
                 {
-                    UserName = model.Email, // MẸO: Gán thẳng Email vào cột UserName
+                    UserName = model.Email,
                     Email = model.Email,
                     FullName = model.FullName,
                     PhoneNumber = model.PhoneNumber
                 };
 
-                // 2. Dùng UserManager để lưu xuống Database (Tự động mã hóa mật khẩu)
+                // 3. Thực thi lưu vào Database qua UserManager
                 var result = await _userManager.CreateAsync(user, model.Password);
 
                 if (result.Succeeded)
                 {
-                    // Bảo mật: Chỉ cho phép cấp quyền Owner hoặc Renter. Ngăn chặn hacker cố tình truyền chữ "Admin"
-                    if (model.Role == "Owner" || model.Role == "Renter")
-                    {
-                        await _userManager.AddToRoleAsync(user, model.Role);
-                    }
-                    else
-                    {
-                        // Mặc định nếu có lỗi sẽ là người thuê
-                        await _userManager.AddToRoleAsync(user, "Renter");
-                    }
+                    // 4. Gắn Role (Vai trò: Renter hoặc Owner) cho tài khoản này
+                    await _userManager.AddToRoleAsync(user, model.Role);
 
-                    // Chuyển hướng sang trang đăng nhập
-                    return RedirectToAction("Login");
+                    // 5. Tự động đăng nhập luôn sau khi đăng ký thành công
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+
+                    // 6. Điều hướng tùy theo Role
+                    if (model.Role == "Owner")
+                        return RedirectToAction("Index", "Owner");
+
+                    return RedirectToAction("Index", "Home");
                 }
 
-                // 4. Nếu có lỗi từ DB (VD: Email đã tồn tại), đẩy lỗi ra giao diện
+                // NẾU LỖI (VD: Trùng email, mật khẩu yếu...): Đẩy lỗi ra màn hình
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            
+
+            // Trả lại View nếu dữ liệu không hợp lệ
             return View(model);
         }
-        
+
         // Đăng xuất
         [HttpPost]
         public async Task<IActionResult> Logout()

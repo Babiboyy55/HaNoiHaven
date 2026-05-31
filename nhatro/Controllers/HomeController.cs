@@ -97,6 +97,16 @@ namespace nhatro.Controllers
                 ViewBag.OwnerPhone = "Đang cập nhật";
             }
 
+            var reviews = await _context.Reviews
+                .Include(r => r.Tenant)
+                .Where(r => r.RoomListingId == id)
+                .OrderByDescending(r => r.CreatedAt)
+                .ToListAsync();
+            
+            ViewBag.Reviews = reviews;
+            ViewBag.ReviewCount = reviews.Count;
+            ViewBag.AverageRating = reviews.Any() ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
+
             return View(room);
         }
 
@@ -366,6 +376,29 @@ namespace nhatro.Controllers
             if (!isRoomRented) return Forbid();
 
             return View(invoice);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Renter")]
+        public async Task<IActionResult> SubmitReview(int roomListingId, int rating, string comment)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return Challenge();
+
+            var review = new Review
+            {
+                RoomListingId = roomListingId,
+                TenantId = user.Id,
+                Rating = rating,
+                Comment = comment,
+                CreatedAt = DateTime.Now
+            };
+
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessRequest"] = "Cảm ơn bạn đã để lại đánh giá!";
+            return RedirectToAction("Detail", new { id = roomListingId });
         }
     }
 }

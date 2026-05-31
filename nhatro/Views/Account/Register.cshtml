@@ -1,4 +1,4 @@
-@model nhatro.Models.RegisterViewModel
+@model nhatro.Models.RegisterViewModel 
 @{
     Layout = null;
 }
@@ -7,30 +7,37 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tạo tài khoản - Hanoi Haven</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <title>Đăng ký tài khoản - Hanoi Haven</title>
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"></noscript>
     <style>
         body { background-color: #F8F9FB; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; min-height: 100vh; overflow-x: hidden; }
         .split-screen { display: flex; min-height: 100vh; }
         
         /* Cột ảnh bên trái */
-        .left-side { flex: 1; background-image: url('https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; position: relative; color: white; display: flex; flex-direction: column; justify-content: flex-end; padding: 50px; }
+        .left-side { flex: 1; background-image: url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&q=80'); background-size: cover; background-position: center; position: relative; color: white; display: flex; flex-direction: column; justify-content: flex-end; padding: 50px; }
         .overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to bottom, transparent, rgba(12, 30, 58, 0.9)); z-index: 1; }
         .left-content { position: relative; z-index: 2; }
         .brand-title { font-size: 3.5rem; font-weight: bold; margin-bottom: 10px; }
         
         /* Cột form bên phải */
-        .right-side { flex: 1; display: flex; align-items: center; justify-content: center; background-color: #F8F9FB; padding: 40px; }
-        .form-container { width: 100%; max-width: 480px; }
-        .form-control { border-radius: 6px; padding: 12px 15px; border-color: #E2E8F0; margin-bottom: 15px; }
+        .right-side { flex: 1; display: flex; align-items: center; justify-content: center; background-color: #F8F9FB; padding: 40px 20px; overflow-y: auto; }
+        .form-container { width: 100%; max-width: 500px; padding: 20px 0; }
+        .form-control { border-radius: 6px; padding: 12px 15px; border-color: #E2E8F0; }
         .form-control:focus { border-color: #136A64; box-shadow: 0 0 0 0.2rem rgba(19, 106, 100, 0.25); }
         .input-icon { position: absolute; left: 15px; top: 15px; color: #94A3B8; }
         .has-icon { padding-left: 45px; }
         .form-label { font-weight: 600; font-size: 0.9rem; color: #334155; margin-bottom: 5px; display: block; }
-        .btn-custom { background-color: #136A64; color: white; font-weight: 500; border-radius: 6px; padding: 14px; margin-top: 10px; }
+        
+        .btn-custom { background-color: #136A64; color: white; font-weight: 500; border-radius: 6px; padding: 14px; margin-top: 10px; transition: all 0.2s; border: none; }
         .btn-custom:hover { background-color: #0f544f; color: white; }
         
+        /* Box chọn Role (Vai trò) */
+        .role-box { border: 1px solid #E2E8F0; border-radius: 8px; padding: 12px; margin-bottom: 15px; background: white; cursor: pointer; transition: all 0.2s; }
+        .role-box:hover { border-color: #136A64; background-color: #f8fafc; }
+        .role-box input[type="radio"] { accent-color: #136A64; transform: scale(1.2); margin-right: 10px; cursor: pointer; }
+        .role-box label { cursor: pointer; margin: 0; font-weight: 600; color: #334155; width: 100%; display: flex; align-items: center; }
+
         @@media (max-width: 992px) {
             .left-side { display: none; }
         }
@@ -38,6 +45,7 @@
 </head>
 <body>
     <div class="split-screen">
+        
         <div class="left-side">
             <div class="overlay"></div>
             <div class="left-content">
@@ -48,86 +56,104 @@
 
         <div class="right-side">
             <div class="form-container">
-                <h1 class="fw-bold mb-2" style="color: #0C1E3A;">Tạo tài khoản</h1>
+                <h2 class="fw-bold mb-2" style="color: #0C1E3A;">Tạo tài khoản</h2>
                 <p class="text-muted mb-4">Bắt đầu hành trình tìm kiếm ngôi nhà mơ ước của bạn.</p>
-                <div asp-validation-summary="All" class="text-error bg-error-container p-3 rounded-lg mb-4 text-sm font-semibold"></div>
+                
+                <div asp-validation-summary="All" class="text-danger mb-3 font-weight-bold" style="font-size: 0.9rem;"></div>
+                
                 <form asp-action="Register" method="post">
                     
-                    <div class="position-relative">
+                    <div class="mb-3">
                         <label class="form-label">Họ và tên</label>
-                        <i class="fa-regular fa-user input-icon"></i>
-                        <input asp-for="FullName" class="form-control has-icon" placeholder="Nhập họ và tên của bạn" />
-                        <span asp-validation-for="FullName" class="text-danger" style="font-size:0.85rem; display:block; margin-top:-10px; margin-bottom: 10px;"></span>
+                        <div class="position-relative">
+                            <i class="fa-regular fa-user input-icon"></i>
+                            <input asp-for="FullName" class="form-control has-icon" placeholder="Nhập họ và tên của bạn" />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
                     </div>
 
-                    <div class="position-relative">
-                        <label class="form-label">Địa chỉ Email</label>
-                        <i class="fa-regular fa-envelope input-icon"></i>
-                        <input asp-for="Email" class="form-control has-icon" placeholder="ví dụ: ten@email.com" />
-                        <span asp-validation-for="Email" class="text-danger" style="font-size:0.85rem; display:block; margin-top:-10px; margin-bottom: 10px;"></span>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Địa chỉ Email</label>
+                            <div class="position-relative">
+                                <i class="fa-regular fa-envelope input-icon"></i>
+                                <input asp-for="Email" class="form-control has-icon" placeholder="ví dụ: ten@email.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Số điện thoại</label>
+                            <div class="position-relative">
+                                <i class="fa-solid fa-phone input-icon"></i>
+                                <input asp-for="PhoneNumber" class="form-control has-icon" placeholder="Nhập số điện thoại" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
+                        </div>
                     </div>
 
-                    <div class="position-relative">
-                        <label class="form-label">Số điện thoại</label>
-                        <i class="fa-solid fa-phone input-icon"></i>
-                        <input asp-for="PhoneNumber" class="form-control has-icon" placeholder="Nhập số điện thoại" />
-                        <span asp-validation-for="PhoneNumber" class="text-danger" style="font-size:0.85rem; display:block; margin-top:-10px; margin-bottom: 10px;"></span>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mật khẩu</label>
+                            <div class="position-relative">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input asp-for="Password" class="form-control has-icon" placeholder="Tối thiểu 8 ký tự" type="password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Xác nhận mật khẩu</label>
+                            <div class="position-relative">
+                                <i class="fa-solid fa-lock input-icon"></i>
+                                <input asp-for="ConfirmPassword" class="form-control has-icon" placeholder="Nhập lại mật khẩu" type="password" />
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
+                        </div>
                     </div>
 
-                    <div class="position-relative">
-                        <label class="form-label">Mật khẩu</label>
-                        <i class="fa-solid fa-lock input-icon"></i>
-                        <input asp-for="Password" class="form-control has-icon" placeholder="Tạo mật khẩu (tối thiểu 8 ký tự)" />
-                        <i class="fa-regular fa-eye position-absolute" style="right: 15px; top: 40px; cursor: pointer; color:#94A3B8"></i>
-                        <span asp-validation-for="Password" class="text-danger" style="font-size:0.85rem; display:block; margin-top:-10px; margin-bottom: 10px;"></span>
-                    </div>
-
-                    <div class="position-relative">
-                        <label class="form-label">Xác nhận mật khẩu</label>
-                        <i class="fa-solid fa-rotate-left input-icon"></i>
-                        <input asp-for="ConfirmPassword" class="form-control has-icon" placeholder="Nhập lại mật khẩu" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger" style="font-size:0.85rem; display:block; margin-top:-10px; margin-bottom: 10px;"></span>
-                    </div>
-
-                    <div class="mb-3 position-relative">
-                        <label class="form-label">Bạn là ai?</label>
-                        <div class="d-flex gap-4 mt-1">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" asp-for="Role" value="Renter" id="roleRenter" checked style="cursor: pointer;">
-                                <label class="form-check-label text-muted" for="roleRenter" style="cursor: pointer; font-size: 0.9rem;">
+                    <label class="form-label mt-2">Bạn là ai?</label>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="role-box">
+                                <label for="roleRenter">
+                                    <input type="radio" asp-for="Role" value="Renter" id="roleRenter" checked />
                                     Người thuê phòng
                                 </label>
                             </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" asp-for="Role" value="Owner" id="roleOwner" style="cursor: pointer;">
-                                <label class="form-check-label text-muted" for="roleOwner" style="cursor: pointer; font-size: 0.9rem;">
+                        </div>
+                        <div class="col-6">
+                            <div class="role-box">
+                                <label for="roleOwner">
+                                    <input type="radio" asp-for="Role" value="Owner" id="roleOwner" />
                                     Chủ trọ (Quản lý)
                                 </label>
                             </div>
                         </div>
-                        <span asp-validation-for="Role" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
+                        <span asp-validation-for="Role" class="text-danger d-block mt-1" style="font-size:0.85rem; padding-left:15px;"></span>
                     </div>
 
                     <div class="form-check mb-4 mt-2">
-                        <input asp-for="AcceptTerms" class="form-check-input" id="termsCheck">
-                        <label class="form-check-label text-muted" for="termsCheck" style="font-size: 0.85rem;">
-                            Tôi đồng ý với các <a href="#" style="color:#0C1E3A; font-weight:bold;">Điều khoản dịch vụ</a> và <a href="#" style="color:#0C1E3A; font-weight:bold;">Chính sách bảo mật</a> của Hanoi Haven.
+                        <input asp-for="AcceptTerms" class="form-check-input" type="checkbox" id="termsCheck" style="cursor: pointer;">
+                        
+                        <label asp-for="AcceptTerms" class="form-check-label text-muted" for="termsCheck" style="font-size: 0.85rem; cursor: pointer;">
+                            Tôi đồng ý với các <a href="#" style="color: #136A64; font-weight: bold; text-decoration: none;">Điều khoản dịch vụ</a> và <a href="#" style="color: #136A64; font-weight: bold; text-decoration: none;">Chính sách bảo mật</a> của Hanoi Haven.
                         </label>
-                        <span asp-validation-for="AcceptTerms" class="text-danger d-block" style="font-size:0.85rem;"></span>
+                        
+                        <span asp-validation-for="AcceptTerms" class="text-danger d-block mt-1" style="font-size:0.85rem;"></span>
                     </div>
 
-                    <button type="submit" class="btn btn-custom w-100">Đăng ký tài khoản <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                    <button type="submit" class="btn btn-custom w-100 mb-3">Đăng ký tài khoản <i class="fa-solid fa-user-plus ms-2"></i></button>
 
-                    <div class="text-center mt-4 text-muted">
-                        Đã có tài khoản? <a asp-action="Login" style="color: #136A64; text-decoration: none; font-weight: bold;">Đăng nhập</a>
+                    <div class="text-center mt-3 text-muted">
+                        Đã có tài khoản? <a asp-controller="Account" asp-action="Login" style="color: #136A64; text-decoration: none; font-weight: bold;">Đăng nhập</a>
                     </div>
                 </form>
             </div>
         </div>
+        
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.20.0/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>
